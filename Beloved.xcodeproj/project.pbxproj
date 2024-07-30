@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 70;
+	objectVersion = 77;
 	objects = {
 
 /* Begin PBXContainerItemProxy section */
@@ -30,9 +30,21 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		26702C662C5736EB00D549DE /* Beloved */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Beloved; sourceTree = "<group>"; };
-		26702C782C5736EC00D549DE /* BelovedTests */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = BelovedTests; sourceTree = "<group>"; };
-		26702C822C5736EC00D549DE /* BelovedUITests */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = BelovedUITests; sourceTree = "<group>"; };
+		26702C662C5736EB00D549DE /* Beloved */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = Beloved;
+			sourceTree = "<group>";
+		};
+		26702C782C5736EC00D549DE /* BelovedTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = BelovedTests;
+			sourceTree = "<group>";
+		};
+		26702C822C5736EC00D549DE /* BelovedUITests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = BelovedUITests;
+			sourceTree = "<group>";
+		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -175,7 +187,6 @@
 				};
 			};
 			buildConfigurationList = 26702C5F2C5736EB00D549DE /* Build configuration list for PBXProject "Beloved" */;
-			compatibilityVersion = "Xcode 15.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -183,6 +194,7 @@
 				Base,
 			);
 			mainGroup = 26702C5B2C5736EB00D549DE;
+			preferredProjectObjectVersion = 77;
 			productRefGroup = 26702C652C5736EB00D549DE /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -461,7 +473,7 @@
 				SDKROOT = auto;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx xros xrsimulator";
 				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
+				SWIFT_VERSION = 6.0;
 				TARGETED_DEVICE_FAMILY = "1,2,7";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Beloved.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Beloved";
 				XROS_DEPLOYMENT_TARGET = 2.0;
@@ -483,7 +495,7 @@
 				SDKROOT = auto;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx xros xrsimulator";
 				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
+				SWIFT_VERSION = 6.0;
 				TARGETED_DEVICE_FAMILY = "1,2,7";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Beloved.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Beloved";
 				XROS_DEPLOYMENT_TARGET = 2.0;

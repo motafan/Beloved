@@ -1,5 +1,5 @@
 //
-//  LoginView.swift
+//  LoginPage.swift
 //  Beloved
 //
 //  Created by 风起兮 on 2024/7/29.
@@ -8,7 +8,7 @@
 import SwiftUI
 import AuthenticationServices
 
-struct LoginView: View {
+struct LoginPage: View {
     @State private var phone: String = ""
     @State private var code: String = ""
     @State private var selection: Bool = false
@@ -99,7 +99,7 @@ struct LoginView: View {
     var loginTop: some View {
         VStack(spacing: 30) {
             UnevenRoundedRectangle(cornerRadii: .init(topLeading: 20, topTrailing: 20))
-                .fill(.foreground)
+                .fill(colorScheme == .light ? .primary : .secondary)
                 .frame(height: 40)
                 .overlay {
                     HStack {
@@ -116,7 +116,7 @@ struct LoginView: View {
                         Text("未注册的手机号注册后自动创建用户")
                             .font(.subheadline)
                             .bold()
-                            .foregroundColor(colorScheme == .light ? .white : .black)
+                            .foregroundColor(colorScheme == .light ? .white : .primary)
                     }
                 }
             
@@ -157,7 +157,7 @@ struct LoginView: View {
         .frame(height: 224, alignment: .top)
         .background {
             RoundedRectangle(cornerRadius: 20)
-                .foregroundColor(.gray.opacity(0.2))
+                .foregroundColor(.secondary.opacity(0.2))
         }
         .overlay(alignment: .topTrailing) {
             Image(uiImage: .loginPin)
@@ -189,5 +189,5 @@ struct LoginView: View {
 }
 
 #Preview {
-    LoginView()
+    LoginPage()
 }
