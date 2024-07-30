@@ -12,6 +12,11 @@ struct LoginView: View {
     @State private var phone: String = ""
     @State private var code: String = ""
     @State private var selection: Bool = false
+    @Environment(\.colorScheme) var colorScheme
+    
+    private var disabledPhoneLogin: Bool {
+        phone.isEmpty || code.isEmpty
+    }
     
     var body: some View {
         
@@ -34,15 +39,16 @@ struct LoginView: View {
                     Button(action: {}) {
                         Text("手机登录")
                     }
-                    .tint(.red)
+                    .foregroundColor(.pink.opacity(disabledPhoneLogin ? 0.5 : 1))
+                    .disabled(disabledPhoneLogin)
                     
                     Button(action: {}) {
                         Text("一键登录")
-                    }.frame(width: 200)
+                    }
                     
                 }
                 .frame(width: 200, height: 40)
-                .background(RoundedRectangle(cornerRadius: 8).fill(Color(white: 0.9)))
+                .background(RoundedRectangle(cornerRadius: 8).fill(.foreground))
                 
                 
             }
@@ -70,7 +76,7 @@ struct LoginView: View {
                     }
                 }
             )
-            .signInWithAppleButtonStyle(.black) // Change button style here
+            .signInWithAppleButtonStyle(colorScheme == .light ? .black: .white) // Change button style here
             .frame(height: 44)
             .padding()
             
@@ -93,6 +99,7 @@ struct LoginView: View {
     var loginTop: some View {
         VStack(spacing: 30) {
             UnevenRoundedRectangle(cornerRadii: .init(topLeading: 20, topTrailing: 20))
+                .fill(.foreground)
                 .frame(height: 40)
                 .overlay {
                     HStack {
@@ -109,7 +116,7 @@ struct LoginView: View {
                         Text("未注册的手机号注册后自动创建用户")
                             .font(.subheadline)
                             .bold()
-                            .foregroundColor(.white)
+                            .foregroundColor(colorScheme == .light ? .white : .black)
                     }
                 }
             
@@ -121,7 +128,7 @@ struct LoginView: View {
                     TextField(text: $phone, prompt: Text("请输入手机号")) {
                         EmptyView()
                     }
-                    
+                    .keyboardType(.phonePad)
                 }
                 
                 HStack {
@@ -131,6 +138,15 @@ struct LoginView: View {
                         EmptyView()
                     }
                     .textFieldStyle(.roundedBorder)
+                    .overlay(alignment: .trailing) {
+                        Button(action: {}) {
+                            Text("获取验证码")
+                                .font(.caption)
+                        }
+                        .buttonStyle(.borderedProminent)
+                        .tint(.yellow)
+                        .padding(.trailing, 3)
+                    }
                 }
             }
             .textFieldStyle(.roundedBorder)
