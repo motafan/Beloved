@@ -1,0 +1,692 @@
+syntax = "proto3";
+
+option java_package = "com.xbyy.game.proto";
+option swift_prefix = "ST";
+
+import "app_channel.proto";
+import "app_user.proto";
+import "message.proto";
+import "common.proto";
+
+/**
+请求：Req结尾，客户端发起某个操作
+返回：Res结尾，服务端回复操作的结果
+通知：Notification结尾，服务端通知某些事件发生了
+快照：Snapshot结尾，服务端定时发送快照以同步一些关键状态
+ */
+
+// 数据/事件类型
+enum MessageId {
+  MsgNone = 0;
+  Create_Channel = 1; // 创建频道
+  Join_Channel = 2; // 加入频道
+  Quit_Channel = 3; // 退出频道
+  BackTo_Channel = 4; // 返回频道
+  Game_Kick_User = 50; // 踢人
+  Game_Join = 51; // 加入游戏 (自动准备)
+  Game_Quit = 52; // 退出游戏
+  Game_Ready = 100; // 准备游戏
+  Game_CancelReady = 101; // 取消准备
+  Game_Start = 102; // 开始游戏
+  Game_Stop = 103; // 游戏结束
+  Game_Terminated = 104; // 强制关闭游戏
+  Game_Message_H5 = 105; // H5游戏端自定义请求数据转发
+  Game_Message_Push = 106; // 游戏服务端推送的消息
+  Cinema_Operation = 120; // "一起看" 操作
+  Data_Refresh = 121; // 数据刷新提醒
+  Message_Gift = 200; // 收发礼物消息推送
+  Message_Activity = 201; // 活动消息推送
+  Message_Contract = 202; // 签约消息推送
+  Message_Payment = 203; // 支付消息推送
+  Message_ChannelChat = 204; // 公屏信息推送
+  Message_CinemaOperation = 205; // "一起看" 操作实时推送
+  Message_BoxGame = 207; // 宝箱游戏
+  Message_Rocket = 208; // 房间火箭消息
+  Message_Common = 209;
+  Message_BubbleGame = 210; // 冒泡泡游戏
+  Message_AppBanner = 211; // 全服横幅消息推送
+  Message_ChannelSnapshot = 250; // 快照快照定时推送:频道状态
+  Message_WishGift = 253; // 房间心愿礼物推送
+
+  Message_BosomFriend = 255; // 挚友信息推送
+  Message_SysMsgNotifyList = 256; // 消息列表通知推送
+  Message_Vip = 257; // vip消息推送
+  Message_Expression = 258; // 动作表情推送
+
+  Message_ChannelOperate = 301; // 房间操作事件
+  Message_DataRefresh = 302; // 数据刷新消息提醒
+  Message_Open_LoveNum = 303; // 开启心动值
+  Message_Close_LoveNum = 304; // 关闭心动值
+  Chat_Message = 305; // 私信消息
+  User_Module = 306; // 用户模块
+  Message_SysMsgNotify = 307; // 消息通知推送
+  Channel_Module = 308; // 房间模块
+  Message_Eidolon = 309; // 幻灵消息推送
+
+
+}
+
+// 哪种游戏
+enum GameId {
+  GameNone = 0;
+  DaHuaShai = 1; // 大话骰
+  ZhuoQiu = 2; // 桌球
+  ShuiShiWoDi = 3; // 谁是卧底
+  WuZiQi = 4; // 五子棋
+  DaFuWeng = 5; // 大富翁
+  DouDiZhu = 6; // 斗地主
+}
+
+// 渠道类型
+enum ChannelType2 {
+  Chat = 0; // 娱乐
+  Game = 1; // 开黑
+  MiniGame = 2; // 互动小游戏
+}
+
+enum ActivityType {
+  Common = 0; // 通用消息推送(如横幅等)
+  Box = 1; // 宝箱消息推送
+  Rabbit = 2; // 萌兔宝藏
+  ScreenEffect = 5; // 全服霸屏svga动效
+  Animation = 6; // 全屏动效
+  H5 = 7; // 活动模块
+}
+
+enum ContractType {
+  UnreadNotify = 0; // 未读提醒
+}
+
+enum PaymentType {
+  OrderInfo = 0; // 普通订单结果详情
+  FirstOrderInfo = 1; // 首充订单详情
+}
+
+// 房间管理角色权限
+enum UserRole {
+  InBlackList = 0; //黑名单内
+  Normal = 1; // 普通用户
+  Admin = 2; // 房间管理员
+  SuperAdmin = 3; // 超级房间管理员
+  Owner = 4; // 房主
+  FamilyOwner = 5; // 族长
+  FamilyDeputyOwner = 6; // 副族长
+}
+
+// 房间外部管理角色权限
+enum ExternUserRole {
+  NotExternalAdmin = 0; // 非管理角色
+  ContractFamilyOwner = 1;// 签约厅家族长
+  NormalFamilyOwner = 2; // 普通家族长
+  ContractFamilyDeputyOwner = 3;// 签约厅家副族长
+  NormalFamilyDeputyOwner = 4; // 普通家副族长
+}
+
+// 播放状态
+enum MediaPlayerState {
+  Stop = 0; // 停止
+  Play = 1; // 播放
+  Pause = 2; // 暂停
+}
+
+// 播放操作
+enum MediaPlayerOperation {
+  OperationPlay = 0;
+  OperationPause = 1;
+  OperationStop = 2;
+  OperationSeek = 3;
+  OperationSync = 4; // 请求同步云端快照
+}
+
+enum CinemaErrorCode {
+  ErrorNone = 0;
+  ErrorOperationInvalid = 1; // 无效的操作请求
+  ErrorNoPermission = 2; // 没有操作权限
+  ErrorUserNotEnough = 3; // 房间人数不足2人
+  ErrorVideoInvalid = 4; // 视频已失效
+}
+enum GiftSource {
+  GiftNone = 0;
+  GiftCommon = 1; // 普通礼物
+  GiftLucky = 2; // 福袋/盲盒
+  GiftLottery = 3; // 抽奖获得礼物
+}
+
+// 业务类型
+enum BusinessType {
+  RemindFirstRecharge = 0; // 首充提醒
+  RefreshMission = 1; // 任务系统数据刷新
+}
+
+enum AppFlag {
+  YINYOU = 0; //音诱语音
+  YOMI = 1; //yomi语音
+  YUANQI = 2; //元气语音
+  KIS = 3; //Kis派对
+}
+
+/*------Begin 通用请求与响应模型-------*/
+
+message AnyMessage {}
+
+// 请求实体
+message Request {
+  MessageId id = 1; // 数据/事件类型
+  int32 version = 2;  // 版本号, 默认1
+  int32 context = 3; // 当次请求id
+  string token = 4;  // 用户id
+  int64 time = 5; // 消息当前时间戳(毫秒)
+  string sign = 6;  // 签名
+  bytes extra = 7; // 发给游戏服务器
+  AppFlag app_flag = 8; // 请求端口
+
+  oneof request { //后续新增功能全部分离出来
+    MessageRequest message = 20;
+    UserRequest user = 21;
+  }
+
+  CreateChannelReq createChannelReq = 100;
+  JoinChannelReq joinChannelReq = 101;
+  KickUserReq kickUserReq = 102;
+  QuitChannelReq quitChanelReq = 103;
+  ModifyChannelReq modifyChannelReq = 104;
+  BackToChannelReq backToChannelReq = 105;
+  CinemaOperationReq cinemaOperationReq = 106;
+
+  AnyMessage gameReadyReq = 200;
+  AnyMessage gameCancelReadyReq = 201;
+  GameJoinReq gameJoinReq = 202;
+  AnyMessage gameQuitReq = 203;
+  AnyMessage gameStartReq = 204;
+  AnyMessage gameStopReq = 205;
+  AnyMessage gameTerminatedReq = 206;
+}
+
+// 响应实体
+message Response {
+  MessageId id = 1;
+  int32 version = 2;  // 协议版本号, 默认1
+  int32 context = 3; // 当次响应对应的请求id
+  int32 code = 4; // 状态码, 0成功，非0失败
+  int64 time = 5; // 消息当前时间戳(毫秒)
+  string msg = 6; // 消息提示
+  bytes extra = 7; // 返回H5游戏端数据转发, 或json
+  AppFlag app_flag = 8; // 请求端口
+
+  oneof response {
+    MessageResponse message = 20;
+    UserResponse user = 21;
+    ChannelResponse channel = 22;
+  }
+
+  CreateChannelRes createChannelRes = 100;
+  JoinChannelRes joinChannelRes = 101;
+  KickUserRes kickUserRes = 102;
+  QuitChannelRes quitChannelRes = 103;
+  ModifyChannelRes modifyChannelRes = 104;
+  BackToChannelRes backToChannelRes = 105;
+  CinemaOperationRes cinemaOperationRes = 106;
+
+  AnyMessage gameReadyRes = 200;
+  AnyMessage gameCancelReadyRes = 201;
+  AnyMessage gameJoinRes = 202;
+  AnyMessage gameQuitRes = 203;
+  AnyMessage gameStartRes = 204;
+  AnyMessage gameStopRes = 205;
+  GameTerminatedRes gameTerminatedRes = 206;
+
+  ChannelSnapshot channelSnapshot = 250; // channel snapshot
+
+  // 以下是通知
+  GiftNotification giftNotification = 300;
+  ActivityNotification activityNotification = 301;
+  ContractNotification contractNotification = 302;
+  PaymentNotification paymentNotification = 303;
+  ChannelChatNotification chatMessageNotification = 304;
+  CinemaOperationNotification cinemaOperationNotification = 305;
+  DataRefreshNotification dataRefreshNotification = 306;
+  BoxGameNotification boxGameNotification = 307;
+  RocketNotification rocketNotification = 308;
+  CommonNotification commonNotification = 310;
+  LotteryNotification lotteryNotification = 311;
+  AppBannerNotification appBannerNotification = 312;
+  WishGiftNotification wishGiftNotification = 313;
+  SysMsgNotification sysMsgNotification = 314;
+  BosomFriendDto bosomFriendDto = 315;
+  SysMsgNotifications sysMsgNotifications = 316;
+  VipNotification vipNotification = 317;
+  EidolonNotification eidolonNotification = 318;//幻灵数据通知
+  ExpressionNotification expressionNotification = 319;//动作表情通知
+}
+
+/*------End通用请求与响应模型-------*/
+
+/*------Begin 具体业务的请求数据模型-------*/
+
+//创建房间请求参数
+message CreateChannelReq {
+  string channelName = 1;
+  ChannelType2 channelType = 2;
+  int32 gameId = 3;
+  int32 daquId = 4;
+  int32 duanId = 5;
+  int32 gameModelId = 6;
+  int32 yuleId = 7;
+  string timestamp = 8;
+}
+
+//加入房间请求参数
+message JoinChannelReq {
+  string channelId = 1;
+  string password = 2;
+  ChannelType2 channelType = 3;
+  bytes body = 4; //H5游戏端自定义数据
+}
+
+message QuitChannelReq {
+  string channelId = 1;
+}
+
+message ModifyChannelReq {
+  string channelId = 1;
+  int32 operateType = 2;
+  string channelName = 3;
+  string channelPwd = 4;
+  string welcomingSpeech = 5;
+  ChannelType2 channelType = 6;
+  int32 gameId = 7;
+  string coverUrl = 8;
+  int32 daquId = 9;
+  int32 duanId = 10;
+  int32 gameModelId = 11;
+  int32 yuleId = 12;
+}
+
+//踢人请求参数
+message KickUserReq {
+  string targetUserId = 1; // 被踢用户id
+}
+
+message BackToChannelReq {
+}
+
+message GameJoinReq {
+  int32 playerPosition = 1; // 玩家游戏位置
+}
+
+message CinemaOperationReq {
+  int64 id = 1; // 操作编号id, CinemaSnapshot快照的id为最后一次执行成功的操作id(含Play/Stop/Pause/Seek)
+  MediaPlayerOperation operation = 2;
+  string channelId = 3; // 房间id
+  int64 videoId = 4;
+  int64 position = 5; // 当前播放的时间点(milliSecond)
+  int32 speed = 6; // 倍速, 1(0.5X), 2(0.75X), 3(1.0X), 4(1.2X), 4(1.5X), 5(2X)...
+}
+
+/*------End 具体业务的请求数据模型-------*/
+
+
+/*------Begin 具体业务的返回数据模型-------*/
+message User {
+}
+
+// 勋章信息
+message MedalInfo {
+  int32 medalId = 1; // 勋章id
+  int32 medalLevelId = 2; // 勋章等级
+  int32 medalLevelNum = 4; // 称号等级数值
+  int32 empiricalValue = 5; // 当前用户勋章累计数值
+  int32 showState = 6; // 展示状态（0.不展示 1.展示）
+  string medalName = 7; // 勋章名称
+  string medalLevelTitle = 8; // 称号名称
+  string medalLevelIcon = 9; // 称号icon
+}
+
+// 萌兔宝藏记录(banner/公屏)
+message RabbitRecord {
+  int32 type = 1; // 获得类型(0宝箱抽奖;1宝箱稀有礼物;2宝箱兑换礼物)
+  string userId = 2;
+  string nickname = 3;
+  int32 prizeId = 4;
+  string prizeName = 5;
+  int32 prizeValue = 6;
+  int32 prizeCount = 7;
+  string bubbleUrl = 8;
+  string prizeIconUrl = 9;
+}
+
+// 口令动画信息
+message PhraseInfo {
+  string effectUrl = 1;
+}
+
+message UserInChannel {
+  string userId = 1;
+  int32 accountId = 2;
+  UserRole role = 3;
+  ExternUserRole externRole = 4;
+  bool canSendAudio = 5;
+  bool canSendMessage = 6;
+  bool isRobot = 7;
+  int32 loveCount = 8;
+  int32 seatIndex = 9;
+  int32 gender = 10;
+  string nickName = 11;
+  string avatarUrl = 12;
+  //EquipmentComponent equipment = 19; //3D人物装扮
+}
+
+message CreateChannelRes {
+}
+
+message JoinChannelRes {
+}
+
+message KickUserRes {
+}
+
+message QuitChannelRes {
+}
+
+message ModifyChannelRes {
+}
+
+message BackToChannelRes {
+}
+
+
+message GameTerminatedRes {
+  string channelId = 1;
+  GameId gameId  = 2;
+}
+
+message CinemaOperationRes {
+  CinemaSnapshot snapshot = 1;
+}
+
+// 收发礼物用户
+message GiftUser {
+  string userId = 1;
+  int32 accountId = 2;
+  string nickName = 3;
+  string avatarUrl = 4;
+  int32 loveNum = 5;
+}
+
+// 礼物配置
+message GiftConfig {
+  int32 id = 1;
+  int32 type = 2; // 礼物类型 0.普通礼物 1.装饰物
+  string name = 3;
+  int32 value = 4;
+  string iconUrl = 5;
+  string effects = 6; // 动效
+  int32 loveNum = 7; //心动值
+  string cornerIcon = 8; // 角标icon
+  GiftEffect effect = 9;//互动礼物特效
+}
+// 宝箱游戏
+message BoxGame {
+  int32 fullServiceValue = 1; // 当前全服累计幸运值
+  int32 carnivalValue = 2; // (嘉年华)触发全服幸运条件值
+  int32 carnivalCountdown = 3; // (嘉年华)活动结束倒计时(单位秒)
+  string boxIcon = 4; // (宝箱)普通入口图标
+  string carnivalIcon = 5; // (嘉年华)活动入口图标
+}
+// 礼物消息推送
+message GiftNotification {
+  int32 showGlobal = 1;   // 横幅全服,是否全频道显示(0.否,1.是,2.)
+  int32 showBanner = 2;   // 是否显示横幅(0.否,1.是)
+  string channelId = 3; // 收发礼物所在频道id
+  int32 giftNum = 4; // 礼物数量
+  GiftConfig giftConfig = 5; // 礼物信息
+  GiftUser sendUser = 6; // 送礼物用户信息
+  repeated GiftUser targetUsers = 7; // 接收礼物用户列表
+  int64 timestamp = 8; // 送礼物时间戳
+  string bannerContent = 9;//自定义横幅内容
+  string bannerStyle = 10;//横幅背景
+  int32 fontStyle = 11;//横幅文字样式(前端判断)0=默认样式，1=活动样式 2=全服特效样式（送礼数量）3=魔法特效样式
+  GiftSource source = 12;
+  string sourName = 13;
+  string bubbleUrl = 14; // (抽奖礼物)气泡样式背景url
+  string channelName = 15;
+  int32 globalType = 16; // 公屏全服,展示位置类型(1.全局,2.频道内)
+  string bubbleUrl2 = 17; //  (公屏)气泡样式背景url
+}
+
+// 活动消息
+message ActivityNotification {
+  ActivityType type = 1;
+  int32 linkType = 2;//跳转类型1=跳转房间，2=跳转网页，3=个人主页
+  string linkValue = 3;//跳转内容
+  int32 lockedStatus = 4;
+  string content = 5;
+  string title = 6;
+  RabbitRecord rabbitRecord = 7;
+  string bgUrl = 8; // 背景图片url
+  int32 bannerShowTime = 9; // 横幅展示停留时间(单位毫秒)
+  FullScreenEffect fullScreenEffect = 12; // 全服霸屏特效
+  AnimationEffect animationEffect = 13; // 动画全屏特效
+  H5Module h5Module = 14; //活动h5模块
+}
+// 宝箱游戏推送
+message BoxGameNotification {
+  ActivityType type = 1;
+  RabbitRecord rabbitRecord = 2; // 活动记录(横幅/公屏显示通用)
+  int32 showBanner = 3; // 是否显示横幅(0.否 1.是)
+  int32 showChat = 4; // 是否显示在公屏(0.否 1.是)
+}
+// 签约消息
+message ContractNotification {
+  ContractType contractType = 1;
+  string content = 2;
+}
+
+// 支付消息
+message PaymentNotification {
+  PaymentType paymentType = 1;
+  string orderNo = 2;
+  bool success = 3;
+  string orderTitle = 4;
+  int32 price = 5; // round(实际金额*100)
+  int32 diamondsInc = 6;
+  int32 diamondsTotal = 7;
+  string payChannel = 8; // 支付渠道: ALIPAY, WECHAT, OTHER
+  double prizeCondition = 9; // 触发了获得奖品的充值条件(价格);判断浮点数相等时注意避坑
+}
+
+// 公屏消息推送
+message ChannelChatNotification {
+  UserInChannel user = 1; // 频道用户信息
+  DressUpInfo pendant = 2; // 挂件信息
+  DressUpInfo bubble = 3; // 气泡信息
+  DressUpInfo avatarFrame = 4; // 头像框信息
+  PhraseInfo phrase = 5; // 口令动画
+  repeated MedalInfo userMedals = 6; // 勋章列表
+  string content = 7; // 具体内容 (如用户发送的公屏消息)
+}
+
+// “一起看” 操作推送
+message CinemaOperationNotification {
+  MediaPlayerOperation operation = 1; //操作
+  UserInChannel operator = 2; // 操作人 (操作人为空，表示自动轮播)
+  CinemaSnapshot snapshot = 3; // 快照
+  int32 favorite = 4; // 视频是否已收藏(0未知1收藏2未收藏)
+}
+// 房间状态快照信息
+message NotifySwitch {
+  int32 gift = 1;
+  int32 activity = 2;
+}
+message MiniGameSwitch {
+  int32 menuid = 1;
+  int32 enable = 2;
+}
+message Family {
+  int32 accountId = 1;
+  int32 ownerAccountId = 2;
+  int32 memberCount = 3;
+  int32 channelCount = 4;
+  string id = 5;
+  string familyId = 6;
+  string ownerId = 7;
+  string avatarUrl = 8;
+  string name = 9;
+}
+message ChatChannelVo {
+  int32 ownerAccountId = 1;
+  int32 status = 2;
+  int32 pkStatus = 3;
+  int32 pkActive = 4;
+  int32 lockedStatus = 5;
+  int32 totalValue = 6;
+  int32 ratedFalseNumber = 7;
+  int32 fixedFalseNumber = 8;
+  int32 ranking = 9;
+  string channelName = 10;
+  string channelType = 11;
+  string ownerId = 12;
+  string avatarUrl = 13;
+  string gameName = 14;
+}
+message ChatChannelPkGameUser {
+  int32 accountId = 1;
+  int32 gender = 2;
+  int32 lovenum = 3;
+  int32 type = 4;
+  int64 createTime = 5;
+  int64 updateTime = 6;
+  string pkId = 7;
+  string pkChannelId = 8;
+  string team = 9;
+  string userId = 10;
+  string nickname = 11;
+  string avatarUrl = 12;
+}
+message PkGameBossUserVo {
+  int32 accountId = 1;
+  int32 value = 2;
+  string userId = 3;
+  string avatarUrl = 4;
+  string nickname = 5;
+  string team = 6;
+}
+message ChatChannelPkGame {
+  string pkRoundId = 1;
+  string channelId = 2;
+  string targetChannelId = 3;
+  string topic = 4;
+  int32 type = 5;
+  int32 duration = 6;
+  int32 redTeamScore = 7;
+  int32 blueTeamScore = 8;
+  int64 createTime = 9;
+  int64 endTime = 10;
+  int32 status = 11;
+  int64 updateTime = 12;
+  int64 systemTime = 13;
+  ChatChannelVo redChannelInfo = 14;
+  ChatChannelVo blueChannelInfo = 15;
+  repeated ChatChannelPkGameUser participants = 16;
+  repeated ChatChannelPkGameUser blueParticipants = 17;
+  repeated PkGameBossUserVo pkBossUsers = 18;
+  repeated PkGameBossUserVo bluePkBossUsers = 19;
+}
+message ChannelSnapshot {
+  int64 id = 1; // 快照编号，值越大说明快照越新
+  CinemaSnapshot cinemaSnapshot = 2;
+  repeated UserInChannel userInSeats = 3;
+  int32 onlineNumber = 4;
+  int32 falseOnlineNumber = 5;
+  //  NotifySwitch notifySwitch = 6;
+  //  repeated MiniGameSwitch miniGameSwitch = 7;
+  //  Family family = 8;
+  string channelId = 9;
+  BoxGame boxGame = 10; // 宝箱活动
+  BoxGame commonCapsuleToys = 11; // 普通
+  BoxGame diamondCapsuleToys = 12; // 钻石
+}
+
+// 一起看房间，视频播放信息同步
+message VideoExtraInfo {
+  string name = 1;
+  string video480Url = 2;
+  string video720Url = 3;
+  string video1080Url = 4;
+}
+
+message CinemaSnapshot {
+  int64 id = 1; // 快照编号，值越大说明快照越新
+  string channelId = 2; // 房间id
+  int64 videoId = 3;
+  MediaPlayerState state = 4; // 播放状态
+  int64 position = 5; // 当前播放的时间点(milliSecond)
+  int32 syncInterval = 6; // 播放进度同步间隔(毫秒)，小于此值可视为与主播同步播放
+  int32 speed = 7; // 倍速, 1(0.5X), 2(0.75X), 3(1.0X), 4(1.2X), 4(1.5X), 5(2X)...
+  VideoExtraInfo extraInfo = 8; // videoId变化时，推送新的video信息
+}
+
+// 数据刷新提醒消息
+message DataRefreshNotification {
+  BusinessType type = 1;
+}
+
+//互动礼物特效
+message GiftEffect{
+  int32 senderExpressionId = 1;
+  int32 acceptExpressionId = 2;
+  int32 interactionType = 3;//用来区分 客户端怎么实现送礼效果表现
+  string effectName = 4;// 特效名字 _0 代表起始位置的特效 _1代表飞行轨迹特效  _2代表到达目的地特效
+  int32 sendVFX = 5;
+  int32 acceptVFX = 6;
+}
+
+// 特效展示活动消息
+message AnimationEffect {
+  string effectsUrl = 1; //动效地址
+  string channelId = 2; //房间id
+}
+
+//房间内活动模块（h5、原生图标）
+message H5Module {
+  string channelId = 1;//房间ID
+  repeated ActivityDialogInfo dialogInfo = 2; //h5弹窗
+  repeated ActivityIconInfo iconInfo = 3;//活动图标
+  bool destroyPreviousDialog = 4;//是否销毁之前的h5弹窗
+  //bool updateIconInfo = 5;//是否更新图标数据
+}
+
+message ActivityDialogInfo {
+  string h5Url = 2;//h5请求链接（链接参数拼接时考虑?和&两种情况拼接）
+}
+
+message ActivityIconInfo {
+  bool showTip = 1;//是否展示提示
+  int64 tipIId = 2;//提示对应的id
+  string tipContent = 3;// 提示内容.
+}
+
+
+/*//3D人物装扮
+message EquipmentComponent {
+  int64 id = 1;
+  int64 body_id = 2; // 身体
+  int64 head_id = 3; // 头
+  int64 eyes_id = 4; // 眼睛
+  int64 hair_id = 5; // 头发
+  // 以下是衣物
+  int64 top_id = 30; // 上衣
+  int64 bottom_id = 31; // 裤子
+  int64 shoes_id = 32; // 鞋子
+  int64 coat_id = 33; // 外套
+  int64 hat_id = 34; // 帽子
+  // 以下是套装
+  int64 dress_id = 50; // 穿搭Dress 与 Bottom、Top 不能同时存在
+  int64 doll_dress_id = 51; // 套装，全身装，不能与其他衣物或发型同时存在
+  // 以下是挂件
+  int64 bag_id = 100; // 包
+  int64 necklace_id = 101; // 项链
+  int64 bracelet_id = 102; // 手饰
+  int64 earring_id = 103; // 耳饰
+}*/
+/*------End 具体业务的返回数据模型-------*/

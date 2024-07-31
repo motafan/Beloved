@@ -1,0 +1,189 @@
+syntax = "proto3";
+
+option swift_prefix = "OS";
+option java_multiple_files = true;
+package com.mm.proto;
+import "api_common.proto";
+
+// 请求体
+message StoreRequest {
+  oneof body {
+    StoreInitReq init = 1; // 初始化商店数据
+    PurchaseProductsReq purchase_products = 5; // 购买装扮
+    WearProductsReq wear_products = 6; // 佩戴装扮
+    CheckProductReq check_product = 7; //给购物车检查下架商品
+    LoadWalletReq load_wallet = 8; // 加载钱包
+    LoadAllProductsReq load_all_products = 81; // 加载全部商品
+    LoadBagProductsReq load_bag_products = 82; // 加载背包的商品
+    GoodsUsingReportReq goods_using = 90; //物品使用数据上报
+  }
+}
+
+// 响应体
+message StoreResponse {
+  oneof body {
+    StoreInitRes init = 1; // 初始化商店数据
+    PurchaseProductsRes purchase_products  = 5; // 购买装扮
+    WearProductsRes wear_products = 6; // 佩戴装备
+    CheckProductRes check_product = 7; //给购物车检查下架商品
+    LoadWalletRes load_wallet = 8; // 加载钱包
+    LoadAllProductsRes load_all_products = 81; // 加载全部商品
+    LoadBagProductsRes load_bag_products = 82; // 加载背包的商品
+    GoodsUsingReportRes goods_using = 90; //物品使用数据上报
+  }
+}
+
+
+message StoreInitReq {
+}
+
+message ProductCategory {
+  int32 id = 1;
+  string name = 2;
+  string icon_url = 3;
+  ProductType type = 5;
+}
+
+enum StoreCategoryType {
+  STORETYPE_NotSet = 0;
+  STORETYPE_Dress = 1;
+  STORETYPE_Body = 3;
+}
+
+message StoreCategory {
+  int32 id = 1;
+  string name = 2;
+  string icon_url = 3;
+  string icon_selected = 4; //选中时icon
+  StoreCategoryType type = 5;
+  repeated StoreCategory sub_category = 6;
+}
+
+
+message StoreInitRes {
+  Wallet wallet = 1;
+  repeated Product wearing_products = 4;
+  repeated StoreCategory dress_store_categories = 6; //装扮商城目录
+  repeated StoreCategory body_store_categories = 7;   //捏脸商城目录
+  repeated ProductCategory body_product_categories = 8; // 在背包的捏脸类目
+  repeated ProductCategory dress_product_categories = 9; // 在背包的装扮类目
+  Product own_defeaultExpression_product = 10; //默认选中表情
+}
+
+enum ProductType {
+  ProductType_NOTSET = 0;
+  ProductType_Equipment = 1;
+  ProductType_Expression = 2;
+  ProductType_Body = 3; //身体部位捏脸的
+}
+
+/**
+ * 限定类型
+ */
+enum ProductLimitType {
+  ProductLimitType_NOTSET = 0;
+  ProductLimitType_FREE = 1; //免费获得
+  ProductLimitType_GENERAL = 2; //付费获得，普通商品
+  ProductLimitType_LEVEL = 3; //财富魅力值要求获得
+  ProductLimitType_NOBILITY = 4; //等级贵族专用
+}
+
+enum OwnState {
+  OwnState_NOTSET = 0;
+  Unowned = 2; // 未拥有
+  Owned = 3; // 已拥有
+}
+
+message Product {
+  ProductType type = 1;
+  int64 id = 2; // 商品ID
+  string name = 3;
+  string icon_url = 4;
+  repeated int32 durations = 5; // 单位：天。 用于表示持续天数，多个可选，0为永久。
+  repeated int32 duration_prices = 6; // 价格，单位：钻石，与durations对应
+  string tag_name = 7;
+  OwnState own = 8;
+  ProductLimitType limit_type = 9;
+  repeated fixed64 equipment_ids = 10; // 包含的装备
+  repeated fixed64 expression_ids = 11; // 包含的动作表情
+  string purchase_hint = 12;//提示文本
+  string corner_icon = 13;
+
+  // 以下属性用于背包或购物车
+  int64 backpack_id = 29;
+  int32 count = 30;
+  int32 duration = 31; // 所购买的天数，durations值中的一个
+  fixed64 expire_timestamp = 32; // 到期时间
+  fixed64 update_timestamp = 33; // 更新时间
+  fixed64 effective_timestamp = 34; // 生效时间
+
+  int32 category_id = 40; // 在背包里面的分类，背包增加时使用
+
+}
+
+
+message LoadAllProductsReq {
+  PageReq page = 1;
+  int32 category_id = 2;
+  int32 sub_category_id = 3;
+  CharacterType character = 4;
+  ProductType type = 5;
+  OwnState own_state = 6;
+}
+
+message LoadAllProductsRes {
+  PageRes page = 1;
+  repeated Product items = 2;
+}
+
+message GoodsUsingReportReq {
+  int64 product_id = 2;
+}
+
+message GoodsUsingReportRes {
+}
+
+message LoadBagProductsReq {
+  PageReq page = 1;
+  int32 category_id = 2;
+  CharacterType character = 3;
+  ProductType type = 5;
+}
+message LoadBagProductsRes {
+  PageRes page = 1;
+  repeated Product items = 2;
+}
+
+message PurchaseProductsReq {
+  repeated Product products = 1;// 填id, count, duration
+  int32 account_id = 3; // 账号ID（赠送填写）
+}
+
+message PurchaseProductsRes {
+  Wallet wallet = 1;
+  repeated Product products = 2; // 更新的背包
+}
+
+message CheckProductReq {
+  repeated Product products = 1;
+}
+
+message CheckProductRes {
+}
+
+message WearProductsReq {
+  //repeated int64 product_ids = 1;// 装备ID
+  repeated int64 backpack_ids = 2;
+}
+
+message WearProductsRes {
+  repeated Product products = 1;
+}
+
+
+message LoadWalletReq {
+}
+
+message LoadWalletRes {
+  Wallet wallet = 1;
+}

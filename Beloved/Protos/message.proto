@@ -1,0 +1,298 @@
+syntax = "proto3";
+
+option java_package = "com.xbyy.game.proto";
+option swift_prefix = "ST";
+import "common.proto";
+
+message MessageRequest {
+  oneof body {
+    SendChatMessageReq send_chat_message = 1; // 发送私聊
+    SendMessageReceiptReq send_chat_message_receipt = 2; // 收到私聊后，app发送回执
+    RetractChatMessageReq retract_chat_message = 3; // 撤回消息
+    DeleteChatMessageReq  delete_chat_message = 4; //删除消息
+    ChatMessageConfigReq  chat_message_config = 5;//私信聊天相关设置
+
+    LoadChatRecordReq load_chat_record = 20; //加载聊天记录&离线消息
+    LoadChatStatusReq load_chat_status = 21; //获取消息状态
+  }
+}
+
+message MessageResponse {
+  oneof body {
+    SendChatMessageRes send_chat_message = 1; // 发送私聊
+    SendMessageReceiptRes send_chat_message_receipt = 2; // 收到私聊后，app发送回执
+    RetractChatMessageRes retract_chat_message = 3; // 撤回消息
+    DeleteChatMessageRes delete_chat_message = 4; //删除消息
+    ChatMessageConfigRes  chat_message_config = 5;//私信聊天相关设置
+
+    LoadChatRecordRes load_chat_record = 20; //加载聊天记录&离线消息
+    LoadChatStatusRes load_chat_status = 21; //获取消息状态
+  }
+  oneof notification {
+    MessageNotification message_notification = 101; // 收到消息
+    ReadMessageNotification read_message_notification = 102; //已读消息通知
+    AuditChatMessageCallback chat_message_callback = 103; //审核消息回调通知
+    UserFollowNotification user_follow = 104; //用户关注消息通知
+    MessagePush message_push = 105; // 消息推送通知
+  }
+
+}
+
+message LoadChatStatusReq {
+  repeated int64 message_id = 1;
+}
+
+message LoadChatStatusRes {
+  MessageStatus message_status = 1;
+}
+
+message MessageStatus {
+  repeated MessageItem messages = 1; // 消息
+}
+
+message LoadChatRecordReq {
+  ChatRecordType  chat_record_type = 1;
+  int64 page = 2;
+}
+
+message LoadChatRecordRes {
+  int64 batch_id = 1; // 批次ID，对应一次推送，增加
+  repeated SessionPatch session_patches = 2; // 消息补丁
+  bool has_more = 3; // 有没有更多
+}
+
+message ChatMessageConfigReq{
+  string target_id = 1; // 对方userId
+  oneof content {
+    string remarks = 2; //备注名
+    bool disturb = 3; //true-开启 false-关闭
+  }
+}
+
+message ChatMessageConfigRes{
+
+}
+
+message DeleteChatMessageReq{
+  string target_id = 1; // 对方userId
+  int64 message_id = 2; // 消息Id
+}
+
+message DeleteChatMessageRes{
+
+}
+
+message SendChatMessageReq {
+  string target_id = 1; // 对方userId
+  ChatMessage message = 2; // 消息内容
+  ChatSource source = 3;//来源（后端用到）
+}
+
+message SendChatMessageRes {
+  UserInCommon receiver = 1; //接收者
+  MessageItem message = 2;  //消息内容
+}
+
+
+
+message ChatMessage {
+  oneof type {
+    string text = 1; // 文本
+    AudioAndVideoMessage audio = 2; // 录音
+    AudioAndVideoMessage video = 3; // 视频
+    ImageMessage image = 4; // 图片
+    string system_warning = 5; //系统警告，提示消息（客户端本地插入）
+
+    RetractChatMessage retract = 10; //撤回消息
+    InterrelationMessage invite = 11; //互动通知
+  }
+}
+
+message InterrelationMessage{
+
+}
+
+message AudioAndVideoMessage {
+  string url = 1; //播放地址
+  int32 duration = 2; //时长
+  string file_path = 3; //客户端用
+}
+
+message ImageMessage{
+  int32 width = 1;
+  int32 height = 2;
+  string image_url = 3;
+  string file_path = 4; //客户端用
+}
+message MessageItem {
+  int64 message_id = 1; // 消息ID
+  string sender_id = 2; // 发送者的userId
+  string receiver_id = 3; // 接收者的userId
+  string warning = 4; // 警告。如：不要转账！
+  int64 timestamp = 5;
+  MessageState state = 6;
+  string tips = 7; // 提示语。如：消息已发出但被对方拒收
+
+  oneof type {
+    SystemMessage system_message = 10; // 系统消息（废弃）
+    InteractMessage interact_message = 11; // 互动消息
+    AdvertisingMessage advertising_message = 12; // 广告消息
+    ChatMessage chat_message = 13; // 私聊消息
+  }
+}
+
+// 消息推送通知
+message MessagePush {
+  oneof type {
+    SystemPrompt system_prompt = 1; // 系统消息提醒
+    InteractPrompt interact_prompt = 2; // 互动消息提醒
+    FamilyPrompt family_prompt = 3; // 家族消息提醒
+    FirstChargePrompt firstChargePrompt = 4; // 首充奖品列表提醒
+    FollowPrompt followPrompt = 5; // 首充奖品列表提醒
+  }
+}
+
+// 系统消息提醒
+message SystemPrompt {
+  string msg_content = 1; // 消息内容
+  int64 timestamp = 2; // 时间戳
+  int32 unread = 3; // 是否有未读消息 0否1是
+}
+
+// 互动消息提醒
+message InteractPrompt {
+  int64 timestamp = 1; // 时间戳
+  int32 unread = 2; // 是否有未读消息 0否1是
+  int32 count = 3; // 消息数量
+}
+
+// 关注消息提醒
+message FollowPrompt {
+  int64 timestamp = 1; // 时间戳
+  int32 unread = 2; // 是否有未读消息 0否1是
+  int32 count = 3; // 消息数量
+}
+
+// 家族消息提醒
+message FamilyPrompt {
+  string msg_content = 1; // 消息内容
+  int64 timestamp = 2; // 时间戳
+  int32 unread = 3; // 是否有未读消息 0否1是
+}
+
+// 充奖励列表消息提醒
+message FirstChargePrompt {
+  string bagName = 1; // 礼包名称
+  repeated FirstChargePrize prizes = 2;//奖品列表
+  string prizeValue = 3; // 礼包奖品总价值
+}
+
+message FirstChargePrize {
+  string giftName = 1; // 奖品名称
+  string giftIcon = 2; // 奖品图标
+  int32 giftType = 3; // 奖品类型
+  int32 dressupType = 4; // 装扮类型
+  int32 duration = 5; // 有效天数
+}
+
+message SystemMessage {
+  int64 unique_id = 1; // 系统消息唯一ID，当unique_id非0，本地将删除旧的同unique_id消息
+  //  oneof type {
+  //    GuildMessage guild = 2;
+  //    UserDecorationMessage decoration = 3;
+  //    SystemMessageInfo message_info = 4;
+  //  }
+}
+
+message InteractMessage {
+  oneof type {
+    InteractionMessage follow = 1; // 关注了我
+    InteractionMessage moment_comment = 2; //动态评论
+    InteractionMessage applaud = 3; //动态点赞
+  }
+}
+
+message AdvertisingMessage {
+
+}
+
+message InteractionMessage {
+  InteractionMessageType type = 1;
+  int64 message_id = 2; // 消息ID
+  UserInCommon sender = 3; // 发送人
+  int64 moment_id = 4; // 动态ID
+  int64 comment_id = 5; // 评论ID，可选
+  bool read = 6; // 已读
+  string content = 7; //评论内容
+  string target_content = 8; //目标内容(Json)
+}
+
+
+
+message SendMessageReceiptReq {
+  MessageReceiptType type = 1;
+  int64 batch_id = 2; // RECEIVED_PATCHES 时使用
+  int64 message_id = 3; // 读消息时使用
+  string target_id = 4; // 读用户消息时使用
+}
+
+message SendMessageReceiptRes {
+}
+
+
+message MessageNotification {
+  int64 batch_id = 2; // 批次ID，对应一次推送，增加
+  repeated SessionPatch session_patches = 1; // 消息补丁
+}
+
+message SessionPatch {
+  oneof type {
+    None system = 1; // 系统消息
+    None interactive = 2; // 互动消息
+    None advertising = 3; // 广告消息（活动中心）
+    UserInCommon chat = 4; // 普通消息，收到该消息的对方用户
+  }
+  repeated MessageItem messages = 10; // 消息
+}
+
+
+message RetractChatMessageReq {
+  string target_id = 1; // 对方userId
+  int64 message_id = 2; // 消息Id
+}
+
+message RetractChatMessageRes {
+
+}
+
+message RetractChatMessage {
+  int64 message_id = 1; // 消息Id
+
+}
+
+
+message ReadMessageNotification{
+  int64 batch_id = 1; // 批次ID
+  repeated ReadMessage readMessage = 2;
+}
+
+message ReadMessage {
+  int64 message_id = 1; // 最新的消息Id
+  string target_id = 2; // 用户ID
+}
+
+message AuditChatMessageCallback {
+  string target_id = 1; // 用户ID
+  int64 message_id = 2; //消息Id
+  bool status = 3; //状态 true-通过,false-失败
+}
+
+message UserFollowNotification {
+  string target_id = 1; // 用户ID
+  FollowState state = 2; //关注状态
+}
+
+enum ChatSource{
+  ChatSource_None = 0;
+  Follow_User = 1; //关注用户
+}

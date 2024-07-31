@@ -1,0 +1,247 @@
+syntax = "proto3";
+
+option swift_prefix = "OS";
+option java_multiple_files = true;
+package com.mm.proto;
+
+import "api_channel.proto";
+import "api_lobby.proto";
+import "api_message.proto";
+import "api_moment.proto";
+import "api_user.proto";
+import "api_common.proto";
+import "api_store.proto";
+import "api_play.proto";
+
+message RawHeader {
+  int32 length = 1;//头长度
+  int32 version = 2;//头版本
+  int32 encrypt = 3;//加密算法,0=不加密,1=AES加密,2=RSA加密
+  int32 compress = 4;//压缩算法
+  int32 coding = 5; // 0 none; 1 hex; 2 base64
+  int32 module = 6; // 请求的业务模块(Main.Request)
+  int32 context = 7;
+}
+
+
+// 请求实体
+message RequestHeader {
+  int32 version = 1;  // 版本号, 默认1
+  int32 context = 2; // 当次请求id
+  string token = 3;  // 用户token
+  int64 timestamp = 4; // 当前时间戳(毫秒ms)
+  Device device = 5; // 初始化时填设备信息
+  int32 appFlag = 6; // appFlag标识
+  string ip = 7; // 客户端不需要传
+}
+
+// 响应实体
+message ResponseHeader {
+  int32 version = 1;  // 协议版本号, 默认1
+  int32 context = 2; // 当次响应对应的请求id
+  int32 code = 3; // 状态码, 0成功，-1失败
+  int64 timestamp = 4; // 消息当前时间戳(毫秒ms)
+  string message = 5; // 消息提示
+  string user_id = 6;//当前用户id
+}
+
+// 请求总入口
+message ApiRequest {
+  RequestHeader header = 1; // 协议头
+  oneof request {
+    MainRequest main = 2;
+    UserRequest user = 3; // 用户相关请求
+    LobbyRequest lobby = 4; // 大厅相关请求
+    MomentRequest moment = 5; // 动态相关请求
+    ChannelRequest channel = 6; // 房间相关请求
+    MessageRequest message = 7; // 消息相关请求
+    StoreRequest store = 8; // 商店相关请求
+    PlayRequest play = 9; // 娱乐玩法相关请求
+  }
+}
+
+// 返回总入口
+message ApiResponse {
+  ResponseHeader header = 1; // 协议头
+  oneof response {
+    MainResponse main = 2;
+    UserResponse user = 3; // 用户相关响应
+    LobbyResponse lobby = 4; // 大厅相关响应
+    MomentResponse moment = 5; // 动态相关响应
+    ChannelResponse channel = 6; // 房间相关响应
+    MessageResponse message = 7; // 消息相关响应
+    StoreResponse store = 8; // 商店相关请求
+    PlayResponse play = 9; // 娱乐玩法相关请求
+  }
+}
+
+message MainRequest {
+  oneof body {
+    InitReq init = 1; // 初始化请求
+    SmsReq smsReq = 2; // 获取验证码请求
+    CheckCodeReq checkCodeReq = 3; // 校验验证码请求
+    VersionReq versionReq = 4; // 版本信息请求
+    QiniuObsReq qiniuObsReq = 5; // 七牛云obs信息请求
+    PointReportReq pointReportReq = 6; // 埋点上报请求
+  }
+}
+
+message MainResponse {
+  oneof body {
+    InitRes init = 1; // 初始化响应
+    SmsRes smsRes = 2; // 获取验证码响应
+    CheckCodeRes checkCodeRes = 3; // 校验验证码响应
+    VersionRes versionRes = 4; // 版本信息响应
+    QiniuObsRes qiniuObsRes = 5; // 七牛云obs信息响应
+    PointReportRes pointReportRes = 6; // 埋点上报响应
+  }
+}
+
+// 初始化请求
+message InitReq {
+}
+
+// 初始化响应
+message InitRes {
+  repeated ChatChannelCovers chatChannelCovers = 1; // 房间背景图信息
+  repeated Emojis emojis = 2; // 表情文件信息
+  int32 certificationSwitch = 3; // 实名认证开关 0.关闭 1.开启
+  string paymentHost = 4; // 支付模块地址
+  HhuaweiObs huaweiObs= 5; // 华为云obs信息
+  int32 channelRealSwitch = 6; // 加入房间实名认证开关
+  int32 adolescentSwitch = 7; // 青少年模式开关 0.关闭 1.开启
+  int32 contractSwitch = 8; // 公会入口开关
+  string contractUrl = 9; // 公会H5地址
+  string withdrawUrl = 10; // 提现（我的水晶）H5地址
+  string miniGameServer = 11; // 长连接地址
+  string emojiBaseUrl = 12; // 表情包内文件路径
+  string familyDetailUrl = 13; // 公会详情页H5地址
+  string wechatEnterpriseId = 14; // 企业微信客服id
+  string wechatStaffService = 15; // 企业微信客服地址
+  repeated LobbyLabel lobbyLabels = 16; //首页标签
+  StartPageInfo startPage = 17; //启动页信息
+  int32 appAuthType =18;// APP用户认证方式 1实名认证2人脸认证
+}
+
+// 首页标签
+message LobbyLabel {
+  int32 menuid = 1; //菜单id
+  string menudesc = 2; //菜单内容
+  int32 showCornerMark = 3; // 是否显示角标0隐藏1显示
+  string cornerMarkUrl = 4; // 角标路径
+}
+
+// 表情文件信息
+message Emojis {
+  string static = 1; // 静态图片文件名(png)
+  string name = 2; // 动态图片文件名(gif)
+  string dynamic = 3; // emoji名称
+}
+// 房间背景图信息
+message ChatChannelCovers {
+  int32 id = 1; // 背景图id
+  string name = 2; // 背景图名称
+  string coverUrl = 3; // 背景图地址
+  string svgaCoverUrl = 4; // svga封面背景地址
+  string mp4CoverUrl = 5; // mp4封面背景地址
+}
+// 华为云obs信息
+message HhuaweiObs {
+  string obsAk = 1; // Access Key
+  string bucket = 2; // 桶
+  string endpoint = 3;
+  string obsSk = 4; // Secret Access Key
+  string domain = 5; // 域名
+}
+
+// 获取验证码请求
+message SmsReq {
+  string mobilePhone = 1; // 手机号码,为空则获取已登录用户绑定手机的验证码
+  CodeType type = 2; // 验证码类型
+}
+// 获取验证码响应
+message SmsRes {
+}
+
+// 校验验证码请求
+message CheckCodeReq {
+  string mobilePhone = 1; // 手机号码
+  string verifyCode = 2; // 验证码
+  CodeType type = 3; // 验证码类型,忘记密码传2
+}
+// 校验验证码响应
+message CheckCodeRes {
+  repeated AccountVo accounts = 1; // 账号列表
+}
+// 账号信息
+message AccountVo {
+  string userId = 1; // 用户系统id
+  int32 accountId = 2; // 账号id
+  string nickname = 3; // 昵称
+  string avatarUrl = 4; // 头像
+  string mobile = 5; // 手机号码
+}
+
+// 版本信息请求
+message VersionReq {
+}
+// 版本信息响应
+message VersionRes {
+  int32 versionCode = 1; // 版本号
+  string versionName = 2; // 版本名
+  int32 appUpdateMode = 3; // 更新方式
+  string downloadUrl = 4; // 下载地址
+  string updateContent = 5; // 更新内容
+}
+
+// 七牛云obs信息请求
+message QiniuObsReq {
+}
+
+// 七牛云obs信息响应
+message QiniuObsRes {
+  repeated UploadTokenVo tokenList = 1;
+  int64 expireTime = 2;
+}
+
+message  UploadTokenVo{
+  string token = 1;
+  string url = 2;
+  string key = 3;
+  int32 fileType = 4;//文件类型 1.头像 2.聊天图片 3.聊天语音 4.聊天视频 5.后台数据 6.动态资源
+}
+
+// 启动页信息
+message StartPageInfo {
+  string name = 1; // 启动页名称
+  string imgUrl = 2; // 图片地址
+  string jumpType = 3;// 跳转类型 0:APP首页;1:房间;2:浏览器
+  string jumpContent = 4; // 跳转目标(房间号或链接地址)
+  JumpChannel jumpChannel = 5; //目标房间信息
+  int32 isShow = 6; //是否显示绑定的用户信息 0否1是
+  ShowUserInfo showUserInfo = 7; //绑定的用户信息
+  int32 duration = 8; //启动页停留时长（秒）
+}
+
+//跳转目标房间信息
+message JumpChannel{
+  string channelId=1;//房间id
+  int32 lockedStatus=2;//是否是密码房（ 0:不是 1:是）
+}
+
+//启动页绑定展示的用户信息
+message ShowUserInfo{
+  string userId = 1;//用户id
+  int32 accountId = 2;//账号id
+  string nickname = 3;//用户昵称
+  string avatarUrl = 4;//用户头像
+}
+
+// 埋点上报请求
+message PointReportReq {
+  PointReportType eventType = 1;//类型 1:动态预览
+  repeated int64 momentIds = 2; // 动态id列表
+}
+// 埋点上报响应
+message PointReportRes {
+}

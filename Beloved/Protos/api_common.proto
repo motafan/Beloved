@@ -1,0 +1,595 @@
+syntax = "proto3";
+
+option swift_prefix = "OS";
+option java_multiple_files = true;
+package com.mm.proto;
+
+
+/**************** 通用枚举 - Start *******************/
+// 验证码枚举
+// 说明：手机号码登录获取验证码不用传类型
+enum CodeType {
+  TYPE_0 = 0;
+  TYPE_1 = 1; // 实名认证验证手机号码、手机绑定验证原手机号码、新手机号码绑定
+  TYPE_2 = 2; // 忘记密码时验证手机号
+}
+// 性别枚举
+enum Gender {
+  GENDER_UNKNOWN = 0; // 未知性别
+  MALE = 1; // 男性
+  FEMALE = 2; // 女性
+}
+// 礼物栏标签枚举
+enum GiftTag {
+  GIFTTAG_UNKNOWN = 0;
+  GIFT = 1; // 礼物
+  BACKPACK = 2; // 背包
+  LUCKYBAG = 3; // 福袋
+  PRIVILEGECARD = 4; // 特权卡
+  STARSIGN = 5; // 星座礼物
+  FANSCLUB = 6; // 粉丝团礼物
+  META_GIFT = 9; // 互动礼物
+}
+// 房间模式
+enum ChannelType {
+  CHANNELTYPE_UNKOWN = 0;
+  YU_LE = 1; // 娱乐模式 YU_LE
+  KAI_HEI = 2; // 开黑模式 KAI_HEI
+  MINI_GAME = 3; // 小游戏模式 MINI_GAME
+}
+// 权限
+enum PowerType {
+  POWERTYPE_UNKNOWN = 0;
+  OWNER = 1; // 房主
+  SUPER_ADMIN = 2; // 超级管理员
+  ADMIN = 3; // 管理员
+  NORMAL = 4; // 普通用户
+  FAMILY_OWNER = 5; // 公会会长
+  BLACKLIST = 6; // 黑名单用户
+}
+// 关注状态
+enum FollowStatus {
+  UNFOLLOW = 0; // 未关注
+  FOLLOW = 1; // 已关注
+  BOTHFOLLOW = 2; // 互相关注
+}
+// 房间内排行榜类型
+enum ChannelRankType {
+  ONLINE = 0; // 在线榜
+  GUARD_WEEK = 1; // 财富周榜
+  GUARD_TOTAL = 2; // 财富总榜
+  CHARM_TOTAL = 3; // 魅力总榜
+  GUARD_DAY = 4; // 财富日榜
+  CHARM_DAY = 5; // 魅力日榜
+  CHARM_WEEK = 6; // 魅力周榜
+  GUARD_MONTH = 7; // 财富月榜(守护)
+  CHARM_MONTH = 8; // 魅力月榜
+}
+// 装扮栏类型
+enum DressUpTagType {
+  MOUNT = 0; // 坐骑
+  HEAD_SHOW = 1; // 麦位框
+  BUBBLE = 2; // 气泡框
+  HOME_DECORATION = 3; // 主页飘
+  TAIL_LIGHT = 4; // 尾灯
+  USER_LABEL = 5; // 账号标签
+}
+// 系统消息类型 1文本消息 2图文消息 3公会消息
+enum SystemMessageType {
+  SYSTEM_MESSAGE_TYPE_UNKNOWN = 0;
+  TEXT_MESSAGE = 1; // 文本消息
+  IMAGE_TEXT_MESSAGE = 2; // 图文消息
+  FAMILY_MESSAGE = 3; // 公会消息
+}
+// 家族消息类型
+enum FamilyMessageType {
+  FAMILY_MESSAGE_TYPE_UNKNOWN = 0;
+  FAMILY_COMMON = 1; // 家族公共消息
+  FAMILY_APPLY = 2; // 家族申请
+  FAMILY_JOIN = 3; // 加入家族
+  FAMILY_EXIT = 4; // 退出家族
+  FAMILY_REMOVE = 5; // 移除成员
+  FAMILY_DISBAND = 6; // 解散家族
+  FAMILY_INVITE_SIGN = 7; // 家族邀请签约
+  FAMILY_APPLY_SIGN = 8; // 主播申请签约
+  FAMILY_INVITE_RENEW = 9; // 家族邀请续约
+  FAMILY_APPLY_RENEW = 10; // 主播申请续约
+  FAMILY_UN_BIND = 11; // 家族发起解约
+}
+
+// 装扮穿戴状态
+enum DressUpStatus {
+  UN_WEAR = 0; // 未穿戴
+  WEAT = 1; // 已穿戴
+}
+// 消息跳转类型
+enum MsgLinkType {
+  LINK_CHANNEL = 0; // 跳房间
+  LINK_WEB = 1; // 跳网页
+  LINK_APP_INDEX = 2; // 跳APP首页
+}
+// 大厅排行榜类型
+enum LobbyRankType {
+  CHARM_RANK = 0; // 魅力榜
+  WEALTH_RANK = 1; // 财富榜
+  CHANNEL_RANK = 2; // 房间榜
+}
+// 大厅排行榜时间范围类型
+enum LobbyRankDateRange {
+  DAY_RANGE = 0; // 日榜
+  WEEK_RANGE = 1; // 周榜
+  MONTH_RANGE = 2; // 月榜
+}
+// PK类型
+enum PkType {
+  ONE_TO_ONE = 0; // 1v1
+  MANY_TO_MANY = 1; // 团战PK4v4
+  CHANNEL_TO_CHANNEL = 2; // 跨厅PK
+}
+// PK队伍
+enum PkTeam {
+  TEAM_UNKNOWN = 0;
+  BLUE = 1; // 蓝方
+  RED = 2; // 红方
+}
+
+enum PointReportType {
+  POINT_0 = 0;
+  POINT_1 = 1;// 动态视频预览
+}
+/**************** 通用枚举 - End ********************/
+
+
+
+/**************** 通用对象 - Start ********************/
+// 设备信息
+message Device {
+  int32 os = 1; // 0:Android;1:iOS;2:小程序;3:PC;4:Web
+  string os_version = 2; // 手机系统版本
+  string model = 3; // 手机型号
+  string app_version = 4; // app版本号,如1.0.0
+  string android = 5; // 安卓id,,IOS不用传
+  string device_id = 6; // 设备id
+  string oaid = 7;
+  string imei = 8;
+  int32 app_id = 9; // app包id,IOS不用传
+  string openid = 10; // openid,IOS固定传“520”
+  int32 channelId = 11; // 来源渠道id,IOS不用传
+  int32 subChannelId = 12; // 来源子渠道id,IOS不用传
+}
+
+// 空结构，方便拓展
+message None {
+}
+
+// 表查找请求
+message TableReq {
+  int64 after_id = 2; // 如果非0，加载在此ID之后的项。如果 beforeId 和 afterId 都为0，则从头加载。
+  int64 count = 3; // 加载的数量
+}
+
+// 表查找返回
+message TableRes {
+  bool has_more = 1; // 有没有更多
+  int64 total_count = 2; // 总数，可选
+}
+
+// 分页请求
+message PageReq {
+  int32 current = 1; // 第几页
+  int32 size = 2; // 页大小
+}
+
+// 分页响应
+message PageRes {
+  int32 pageIndex = 1; // 第几页
+  int32 pageSize = 2; // 页大小
+  int32 pageCount = 3; // 页总数，可选
+  int32 itemCount = 4; // 总数量，可选
+  bool has_more = 5; // 有没有更多
+}
+
+// 房间信息
+message ChannelVo {
+  int32 channelNo = 1; // 房间号,展示用
+  string channelId = 2; // 房间系统id
+  string channelName = 3; // 名称
+  string avatarUrl = 4; // 头像
+  ChannelType channelType = 5; // 房间类型
+  string ownerId = 6; // 房主id
+  int32 status = 7; // 状态
+  int32 onlineNumber = 8; // 在线人数
+  int32 falseOnlineNumber = 9; // 假人人数
+  int32 lockedStatus = 10; // 上锁状态,0:未上锁 1:上锁
+  string welcomingSpeech = 11; // 欢迎语
+  int32 publicScreenStatus = 12; // 公屏开启状态,0:未开启 1:开启
+  int32 ownerAccountid = 13; // 房主账号id,展示用
+  string labels = 14; // 标签集合
+  string ownerNickname = 15; // 房主昵称
+  string coverUrl = 16; // 背景图
+  int32 displayNumber = 17; // 展示数
+  string labelName = 18; // 标签名
+  int32 seat0Status = 19; // 房主位锁状态(锁)（0锁麦并开麦 1解锁麦并开麦 2解锁麦并闭麦 3锁麦并闭麦）
+  int32 seat1Status = 20; // 1号麦位锁状态（0锁麦并开麦 1解锁麦并开麦 2解锁麦并闭麦 3锁麦并闭麦）
+  int32 seat2Status = 21; // 2号麦位锁状态（0锁麦并开麦 1解锁麦并开麦 2解锁麦并闭麦 3锁麦并闭麦）
+  int32 seat3Status = 22; // 3号麦位锁状态（0锁麦并开麦 1解锁麦并开麦 2解锁麦并闭麦 3锁麦并闭麦）
+  int32 seat4Status = 23; // 4号麦位锁状态（0锁麦并开麦 1解锁麦并开麦 2解锁麦并闭麦 3锁麦并闭麦）
+  int32 seat5Status = 24; // 5号麦位锁状态（0锁麦并开麦 1解锁麦并开麦 2解锁麦并闭麦 3锁麦并闭麦）
+  int32 seat6Status = 25; // 6号麦位锁状态（0锁麦并开麦 1解锁麦并开麦 2解锁麦并闭麦 3锁麦并闭麦）
+  int32 seat7Status = 26; // 7号麦位锁状态（0锁麦并开麦 1解锁麦并开麦 2解锁麦并闭麦 3锁麦并闭麦）
+  int32 seat8Status = 27; // 8号麦位锁状态（0锁麦并开麦 1解锁麦并开麦 2解锁麦并闭麦 3锁麦并闭麦）
+  string createTime = 28; // 创建时间
+  string updateTime = 29; // 更新时间
+  string channelPwd = 30; // 房间密码
+  string uniCode = 31; // 菜单唯一值
+}
+
+// 用户个人信息
+message UserVo {
+  string userId = 1; // 用户系统id
+  int32 accountId = 2; // 账号id
+  string channelId = 3; // 房间id
+  string nickname = 4; // 昵称
+  string avatarUrl = 5; // 头像
+  Gender gender = 6; // 性别
+  string birthday = 7; // 生日
+  string signature = 8; // 个性签名
+  int32 following = 9; // 关注数量
+  int32 followers = 10; // 粉丝数量
+  string coverUrl = 11; // 封面图片
+  PowerType powerType = 12; // 房间权限 OWNER:房主 SUPER_ADMIN:超级管理员 ADMIN:管理员 NORMAL:普通用户 FAMILY_OWNER:公会会长 BLACKLIST:黑名单用户
+  string visitTime = 13; // 创建时间
+  string showVoice = 14; // 声音介绍-语音
+  int32 showDuration = 15; // 声音介绍-语音时长(毫秒)
+  int32 showStatus = 16; // 声音介绍-状态(0:未设置, 1:已通过, 2:审核中)
+}
+
+// 用户在房间内信息
+message UserInChannel {
+  string channelId = 1; // 房间id
+  string userId = 2; // 用户系统id
+  int32 accountId = 3;  // 账号id
+  string nickname = 4; // 昵称
+  string avatarUrl = 5; // 头像
+  Gender gender = 6; // 性别
+  int32 seat = 7; // 麦位
+  int32 allowToSpeak = 8; // 是否允许发言(用户是否能说话)
+  int32 allowToType = 9; // 是否允许打字(用户是否能公屏打字)
+  PowerType powerType = 10; // 权限 OWNER:房主 SUPER_ADMIN:超级管理员 ADMIN:管理员 NORMAL:普通用户 FAMILY_OWNER:公会会长 BLACKLIST:黑名单用户
+}
+
+// 用户设置信息
+message UserSetting {
+  string userId = 1; // 用户id
+  int32 hasCertification = 2; // 是否实名认证 0:未实名 1:已实名
+  int32 certificationAge = 3; // 实名年龄
+  int32 hasAdolescent = 4; // 是否开启青少年模式 0:否 1:是
+  string password = 5; // 密码,由md5加密,只有登录接口会返回
+  string displayName = 6; // 展示身份证姓名
+  string displayNumber = 7; // 展示身份证号
+  int32 createChannelAuth = 11;//未实名是否有创建房间权限，0=无，1=有
+  int32 upSeatAuth = 12;//未实名是否有上麦权限，0=无，1=有
+  int32 publicChatAuth = 13;//未实名是否有发公屏权限，0=无，1=有
+  int32 momentAuth = 14;//未实名是否有发布动态权限，0=无，1=有
+  int32 commentAuth = 15;//未实名是否有评论动态权限，0=无，1=有
+  int32 createFamilyAuth = 16;//未实名是否有创建家族权限，0=无，1=有
+  int32 faceVerification = 10; // 是否人脸识别（0否1是）
+}
+
+// 用户勋章列表
+message MedalList {
+  int32 medalId = 1; // 勋章id
+  string medalName = 2; // 勋章名称,如财富值、魅力值
+  string medalLevelTitle = 3; // 勋章标题,如英勇游侠
+  string medalIndex = 4; // 勋章标识,如TREASURE_0_0
+  string medalLevelIcon = 5; // 勋章等级图标(包含等级)
+  string medalLevelIcon2 = 6; // 勋章等级图标(右下角不带等级)
+  int32 totalLevel = 7; // 勋章总等级
+  string cornerColor = 8; // 勋章右下角rgb颜色值
+  int32 startLevelValue = 9; // 开始经验值
+  int32 empiricalValue = 10; // 当前经验值
+  MedalList nextUserMedalLevelVo = 11; // 下一等级信息
+}
+
+// 装扮信息
+message DressUpInfo {
+  string dressName = 1; // 头像框名称
+  string dressIcon = 2; // 头像框静态图片地址
+  string dressIconSvga = 3; // 头像框动态图片地址
+  repeated string cardDecoration = 4; // 资料卡装饰
+  repeated string homeDecoration = 5; // 主页装饰动画
+  string taillightUrl = 6; // 尾灯
+  repeated AccountLabel accountLabel = 7; // 账号标签信息
+  int32 prettyAccount = 8; // 靓号标识,0：没有靓号, 1：存在靓号
+  repeated PendantInfo2 pendantList = 9; // 挂件列表信息
+}
+
+// 贵宾卡信息
+message HonouredGuestCard {
+  int64 cardId = 1; // 贵宾卡Id
+  int64 levelId = 2; // 贵宾卡等级Id
+  string cardName = 3; // 贵宾卡名称
+  string cardIcon = 4; // 贵宾卡标志
+  int32 cardCount = 5; // 数量
+  string backdropUrl = 6; // 贵宾卡背景样式
+  string promptUrl = 7; // 公屏提示样式
+  string fontColor = 8; // 字体颜色
+  string honouredGestUrl = 9; // 贵宾卡图标
+  int32 channelNo = 10; // 房间号
+  string channelName = 11; // 房间名称
+  string avatarUrl = 12; // 房间封面
+  string channelId = 13; // 房间id
+  int64 wealthValue = 14; // 财富值
+  int64 protectionValue = 15; // 保级值
+  int64 levelUpdateTime = 16; // 贵宾卡等级更新时间戳
+  int64 systemTime = 17; // 当前系统时间戳
+}
+
+// 幻灵信息
+message EidolonInfo {
+  int64 id = 1; // 我的幻灵id
+}
+
+// 账号标签信息
+message AccountLabel {
+  string labelName = 1; // 标签名称
+  string labelUrl = 2; // 标签图片地址
+  string labelUrl2 = 3; // // 标签图片地址
+}
+
+// 挂件信息
+message PendantInfo2 {
+  int32 dressId = 1; // 装扮id
+  string dressName = 2; // 装扮名称
+  string dressIcon = 3; // 装扮图标
+  string effectUrl = 4; // 装扮特效
+}
+
+// 麦位用户信息
+message UserInSeats {
+  string channelId = 1; // 房间id
+  string userId = 2; // 用户系统id
+  int32 accountId = 3; // 账号id
+  string nickname = 4; // 昵称
+  string avatarUrl = 5; // 头像
+  Gender gender = 6; // 性别 1男2女
+  int32 seat = 7; // 麦位号 0-8
+  int32 lovenum = 8; // 心动值
+  int32 allowToSpeak = 9; // 允许发言(用户是否能说话)
+  int32 allowToType = 10; // 允许打字(用户是否能公屏打字)
+  PowerType powerType = 11; // 角色
+  int32 channelPowerType = 12; // 房间外部管理角色权限（0.没权限 1.签约厅家族长 2.普通家族长）
+  int32 robot = 13; // 是否机器人
+  int32 status = 14; // 状态 0不在房间 1在房间内 2隐身进房
+  DressUpInfo dressUpInfo = 15; // 装扮信息
+  HonouredGuestCard honouredGuestCard = 16; // 贵宾卡信息
+  EquipmentComponent equipment = 17;//3D任务形象
+}
+
+// 互动消息
+message InteractionVo {
+  int32 id = 1; // id
+  int32 interactiveType = 2; // 互动类型(1.动态评论 2.评论回复 3.动态点赞 4.评论点赞 5.关注)
+  string targetUserId = 3; // 被互动的目标用户Id
+  int32 interactiveTargetId = 4; // 被互动的瞬间（动态）评论Id/回复评论Id/点赞Id/关注Id
+  int64 assistTargetId = 5; // 辅助记录Id
+  string interactiveContent = 6; // 互动内容
+  string userId = 7; // 用户系统id
+  string avatarUrl = 8; // 操作用户头像
+  string nickname = 9; // 昵称
+  int32 hasRead = 10; // 是否已读(0.未读 1.已读)
+  int64 createTimestamp = 11; // 时间戳
+  string momentFirstPic = 12; // 动态的第一张图
+  string thought = 13; //动态内容
+  int32 momentType = 14;//动态类型 0图文，1视频，2音频
+  int32 status = 15;//互动状态（0.失效(删除) 1.有效）
+}
+
+// 房间用户信息
+message ChatChannelUserVo {
+  string userId = 1; // 用户系统id
+  int32 accountId = 2; // 账号id
+  string nickname = 3; // 昵称
+  string avatarUrl = 4; // 头像
+  Gender gender = 5; // 性别
+  int32 seat = 6; // 麦位
+  PowerType powerType = 7; // 角色权限
+}
+
+// 粉丝团信息
+message FansClubVo {
+  string userId = 1; // 用户系统id
+  int32 accountId = 2; // 账号id
+  string nickname = 3; // 昵称
+  string avatarUrl = 4; // 头像
+  int64 clubId = 5; // 粉丝团Id
+  string channelId = 6; // 房间Id
+  int32 count = 7; // 粉丝团人数
+  string badgeName = 8; // 粉丝团勋章名称
+  string badgeIcon = 9; // 粉丝团勋章等级icon
+  string badgeLevel = 10; // 粉丝团勋章等级
+  int32 status = 11; // 粉丝团状态 0失效 1审核中 2拒绝 3通过 ; (粉丝团用户状态 0无关系 1粉丝成员)
+  string targetId = 12; //目标用户Id
+  int32 level = 13; //粉丝团等级
+  int64 intimacyValue = 14; //当前等级亲密值
+  int32 nextLevel = 15; //下一等级
+  int64 nextLevelValue = 16; //下一等级亲密度阀值
+  int32 currentValue = 17; //当日亲密值
+  int32 upperLimitValue = 18; //亲密值上限阀值
+  int64 maxLevelValue = 19; // 最大等级亲密度
+}
+
+// 粉丝团礼物信息
+message FansClubGiftVo {
+  int32 giftId = 1; // 礼物Id
+  string name = 2; // 礼物名称
+  string iconUrl = 3; // 礼物角标
+  string value = 4; // 礼物价值
+  string effects = 5; // 礼物动效
+  string cornerIcon = 6; // 角标Icon
+  string giftNum = 7; // 数量
+}
+
+// 亲密值信息
+message IntimacyVo {
+  int32 currentValue = 17; //当日亲密值
+  int32 upperLimitValue = 18; //亲密值上限阀值
+}
+
+// 粉丝团信息
+message FansClubTaskVo {
+  int32 taskId = 1; // 任务id
+  int32 locationType = 2; // 任务触发位置类型 1点击触发 2进房 3送礼 4分享 5公屏发言 6私聊 7麦位
+  int32 name = 3; // 任务名称
+  int32 iconUrl = 4; // 任务图标
+  int32 prizeValue = 5; // 奖品价值
+  int32 count = 6; // 奖品数量
+  int32 buttonName = 7; // 按钮名称
+  int32 giftName = 8; // 礼物名称
+  int32 giftIconUrl = 9; // 礼物Icon
+  int32 condition2 = 10; // 任务条件（分钟）
+  int32 taskStatus = 11; // 任务完成状态（0未完成1已完成）
+}
+
+//// 当前所在房间信息
+//message CurrentLocation {
+//  int32 channelNo = 1; // 房间号,展示用
+//  string channelId = 2; // 房间系统id
+//  string channelName = 3; // 名称
+//  string avatarUrl = 4; // 头像
+//  ChannelType channelType = 5; // 房间类型
+//  string ownerId = 6; // 房主id
+//}
+/**************** 通用对象 - End ********************/
+
+
+message Wallet {
+  int64 diamond_count = 1; // 钻石
+  int64 crystal_count = 2; // 水晶
+}
+
+
+enum CharacterType {
+  CharacterType_NOTSET = 0;
+  Boy = 1;
+  Girl = 2;
+}
+
+// 装备类型，与EquipmentComponent的序号对应
+enum EquipmentType {
+  EquipmentType_NOTSET = 0;
+  Body = 2;
+  Head = 3;
+  Eyes = 4;
+  Hair = 5;
+  Brow = 6; // 眉毛
+  Nose = 7; // 鼻型
+  Mouth = 8; // 嘴型
+  Face = 9; // 脸型
+  Blush = 10; // 腮红
+  Pupil = 11; // 瞳孔
+  Eyelash = 12; // 睫毛
+  Eyeshadow = 13; // 眼妆
+  BrowColor = 14; // 眉色
+  Lipstick = 15; // 口红
+  Beard = 16; // 胡子
+  Top = 30;
+  Bottom = 31;
+  Shoes = 32;
+  Coat = 33;
+  Hat = 34;
+  Dress = 50;
+  DollDress = 51;
+  Bag = 100;
+  Necklace = 101;
+  Bracelet = 102;
+  Earring = 103;
+}
+
+//3D人物装扮
+message EquipmentComponent {
+  int64 id = 1;
+  int64 body_id = 2; // 身体
+  int64 head_id = 3; // 头
+  int64 eyes_id = 4; // 眼睛
+  int64 hair_id = 5; // 头发
+  // 以下是衣物
+  int64 top_id = 30; // 上衣
+  int64 bottom_id = 31; // 裤子
+  int64 shoes_id = 32; // 鞋子
+  int64 coat_id = 33; // 外套
+  int64 hat_id = 34; // 帽子
+  // 以下是套装
+  int64 dress_id = 50; // 穿搭Dress 与 Bottom、Top 不能同时存在
+  int64 doll_dress_id = 51; // 套装，全身装，不能与其他衣物或发型同时存在
+  // 以下是挂件
+  int64 bag_id = 100; // 包
+  int64 necklace_id = 101; // 项链
+  int64 bracelet_id = 102; // 手饰
+  int64 earring_id = 103; // 耳饰
+}
+
+message GoodsPrice {
+  int32 value = 1; // 价格
+  int32 duration = 2; // 时长
+}
+
+//个播心愿礼物
+message UserWishGiftVo{
+  int32 finish = 1; // 是否已达成，0：进行中，1：已完成
+  int32 maxLimitValue = 2; // 最大礼物限制价值
+  repeated WishGiftProgress progressList = 3; // 心愿进度列表
+  repeated WishGifttopUser topUser = 4; // 前三用户列表
+  int32 userCount = 5; // 助力人数
+  int32 wishSwitch = 6; // 心愿礼物开关
+}
+
+message WishGiftProgress{
+  string cornerIcon = 1; // 角标icon
+  string effects = 2; // 角标icon
+  int32 finishCount = 3; // 已完成数
+  int32 giftCount = 4; // 礼物数
+  int32 giftId = 5; // 礼物id
+  string iconUrl = 6; // 礼物icon
+  string name = 7; // 礼物名称
+  int32 value = 8; // 礼物价值
+  int32 timedCornerMark = 9; // 是否显示限时角标
+  int32 bannerType = 10; // 横幅类型
+  string bannerContent = 11; // 横幅内容
+  int32 showPop = 12; // 是否弹出
+  int32 giftType = 13; // 礼物类型 0普通礼物 5粉丝团礼物
+  int32 giftFlag = 14; // 粉丝团-是否入团礼物 (0否1是)
+}
+message WishGifttopUser{
+  string avatarUrl = 1; // 用户头像
+}
+
+//礼物藏馆vo
+message CollectionHallVo{
+  int32 configId = 1; // 配置Id
+  string name = 2; // 名称
+  int32 level= 3; // 等级
+  int32 count= 4; // 数量
+  int32 totalCount= 5; // 总数量
+  int64 parentId= 6; // 父级Id
+  string brightUrl = 7; // 亮图标
+  string greyUrl = 8; // 灰图标
+  int32 giftId = 9; // 礼物id
+  string giftName = 10; // 礼物名称
+  string giftIconUrl = 11; // 礼物icon
+  int32 giftLovenum = 12; // 心动值
+  int32 giftValue = 13; // 礼物价值
+  string giftEffects = 14; // 礼物动效,可返回空
+  int32 giftType = 15; // 礼物类型
+  int32 seriesId = 16; // 系列ID
+  string remark = 17; // 礼物介绍
+  string levelName = 18; // 等级名称
+  string levelIcon = 19; // 等级Icon
+
+  int32 limited = 50; // 是否限时 0否1是
+  int64 effectiveTimeTamp = 51; // 限时开始时间戳
+  int64 expireTimeTamp = 52; // 限时结束时间戳
+  int32 days = 53; // 天数
+  int32 prizeIndex = 54; // 奖励标识
+
+}

@@ -1,0 +1,452 @@
+syntax = "proto3";
+
+option swift_prefix = "OS";
+option java_multiple_files = true;
+package com.mm.proto;
+
+import "api_common.proto";
+
+
+// 动态相关请求
+message MomentRequest {
+    oneof body {
+        LoadMomentReq loadMomentsReq = 1; // 加载最新动态列表请求
+        MomentDetailReq momentDetailReq = 2; // 动态详情请求
+        LoadCommentsReq loadCommentsReq = 3; // 加载评论列表请求
+        PersonMomentsReq personMomentsReq = 4; // 我的/指定用户/标签/关注的人动态列表请求
+        ApplaudReq applaudReq = 5; // 点赞动态/评论请求
+        MakeCommentReq makeCommentReq = 6; // 评论动态请求
+        PublishMomentReq publishMomentReq = 7; // 发布动态请求
+        DeleteMomentReq deleteMomentReq = 8; // 删除动态请求
+        LoadInteractionsReq loadInteractionsReq = 9; // 加载互动信息列表请求
+        LoadTagsReq loadTagsReq = 10; // 获取标签(话题)列表请求
+        LoadRecommendMomentsReq loadRecommendMomentsReq = 11; // 获取推荐动态列表请求
+        LoadRecommendTopicReq loadRecommendTopicReq = 12; // 获取推荐话题列表请求
+        LoadTopicMomentReq loadTopicMomentReq = 13; // 根据话题获取动态请求
+        ReadInteractionsReq readInteractionsReq = 14; // 将互动消息设置为全部已读请求
+        CheckMomentMessageReq checkMomentMessageReq = 15; // 检查动态消息请求
+        TopicDetailReq topicDetailReq = 16; // 获取话题详情请求
+        RecommendChannelReq recommendChannelReq = 17; // 优质推荐房间请求
+        TopicPlazaReq topicPlazaReq = 18; // 话题广场列表请求
+        LoadMomentVideoReq LoadMomentVideoReq = 19; // 动态视频列表请求
+        DeleteCommentReq deleteCommentReq = 20; // 删除动态评论请求
+        MomentStatusListReq momentStatusListReq = 21; // 检测动态用户所在房间状态列表请求
+    }
+}
+
+// 动态相关响应
+message MomentResponse {
+    oneof body {
+        MomentListRes MomentListRes = 1; // 加载最新动态列表响应
+        MomentDetailRes momentDetailRes = 2; // 动态详情响应
+        LoadCommentsRes loadCommentsRes = 3; // 加载评论列表响应
+        PersonMomentsRes personMomentsRes = 4; // 我的/指定用户/标签/关注的人动态列表响应
+        ApplaudRes applaudRes = 5; // 点赞动态/评论响应
+        MakeCommentRes makeCommentRes = 6; // 评论动态请求
+        PublishMomentRes publishMomentRes = 7; // 发布动态响应
+        DeleteMomentRes deleteMomentRes = 8; // 删除动态响应
+        LoadInteractionsRes loadInteractionsRes = 9; // 加载互动信息列表响应
+        LoadTagsRes loadTagsRes = 10; // 获取标签列表响应
+        LoadRecommendMomentsRes loadRecommendMomentsRes = 11; // 获取推荐动态列表响应
+        LoadRecommendTopicRes loadRecommendTopicRes = 12; // 获取推荐话题列表响应
+        LoadTopicMomentRes loadTopicMomentRes = 13; // 根据话题获取动态响应
+        ReadInteractionsRes readInteractionsRes = 14; // 将互动消息设置为全部已读响应
+        CheckMomentMessageRes checkMomentMessageRes = 15; // 检查动态消息响应
+        TopicDetailRes topicDetailRes = 16; // 获取话题详情响应
+        RecommendChannelRes recommendChannelRes = 17; // 优质推荐房间响应
+        TopicPlazaRes topicPlazaRes = 18; // 话题广场列表响应
+        DeleteCommentRes deleteCommentRes = 20; // 删除动态评论响应
+        MomentStatusListRes momentStatusListRes = 21; // 检测动态用户所在房间状态列表响应
+    }
+}
+
+// 加载最新动态列表请求
+message LoadMomentReq {
+    int32 size = 1; // 每页数量大小
+    int32 direction = 2; // 0: 加载bottomMomentId（不含）后面的内容,1: 加载topMomentId（不含）前面的内容,为空则从第一个开始加载
+    string bottomMomentId = 3; // 本地最后一个动态id,见direction
+    Gender gender = 4; // 性别
+    string topMomentId = 5; // 本地第一个动态Id,见direction
+    int32 type = 9;//动态类型（0图文 1视频 2音频）（-1默认查询全部）
+    int64 currentMomentId = 10; //查看视频详情传入当前的动态ID
+}
+// 加载最新动态列表响应
+message MomentListRes {
+    repeated MomentVo moments = 1; // 动态信息列表
+    int32 hasNew = 2; // 是否有新动态, 0:没有 1:有
+    int32 totalSize = 3; // 数量
+}
+
+// 动态信息
+message MomentVo {
+    int64 momentId = 1; // 动态Id
+    string thought = 2;  // 动态内容
+    int32 applaudCount = 3; // 点赞数
+    int32 commentCount = 4; // 评论数
+    int32 followed = 5; // 是否可以关注（0:可关注, 1:不可关注（已关注或者是自己））
+    int32 applaud = 6; // 是否可以点赞（0:未点赞, 1:已点赞）
+    repeated string pictureUrls = 7; // 图片列表
+    int64 publishTime = 8; // 发布时间(时间戳)
+    Publisher publisher = 9; // 发布者信息
+    repeated Tag tagsList = 10; // 标签列表
+    repeated ApplaudVo applaudList = 11; // 点赞列表,点赞数大于5返回
+    int32 blacklistStatus = 12; // 黑名单状态(动态详情才返回) 0未拉黑 1已拉黑
+    int32 topType = 13;//置顶类型，0：无，1：普通置顶，2：官方置顶
+    int32 type = 14;//动态类型（0图文 1视频 2音频）（-1默认查询全部）
+    string resourceUrl = 15;// 视频/音频资源地址
+    string coverUrl = 16;// 视频/音频资源地址
+    int32 duration = 17;//资源时长(秒)
+    int32 resourceSize = 18;//视频/资源大小(字节)
+    int32 width = 19;//视频宽(像素)
+    int32 height = 20;//视频高(像素)
+    string channelId = 21;//房间Id
+    int32 lockedStatus = 22;//是否上锁, 0:否 1:是
+    string userId = 23; // 用户Id
+}
+// 发布者信息
+message Publisher {
+    string userId = 1; // 用户系统id
+    int32 accountId = 2; // 用户id
+    string nickname = 3; // 昵称
+    string avatarUrl = 4; // 头像
+    string channelId = 5; // 房间id
+    Gender gender = 6; // 性别
+}
+// 标签信息
+message Tag {
+    int32 id = 1; // 标签id
+    string title = 2; // 标签标题
+    string tagImg = 3; // 标签图片
+    string coverUrl = 4; // 标签背景图
+    string description = 5; // 标签描述
+    string cornerIcon = 6; // 角标icon
+    int32 momentCount = 7; // 动态数量
+    int32 applaudCount = 8; // 点赞数量
+    int32 userCount = 9; // 参与用户数量
+    int32 sort = 10; // 排序
+    repeated string pictureList = 11; // 话题图片列表(最多9张),检查动态消息接口返回
+    LatestMoment moment = 12; // 最新发布的一条动态消息,话题广场列表接口返回
+}
+// 点赞用户信息
+message ApplaudVo {
+    string userId = 1; // 用户系统id
+    string nickname = 2; // 用户昵称
+    string avatarUrl = 3; // 用户头像
+}
+// 最新发布的动态消息
+message LatestMoment {
+    int64 momentId = 1; // 动态Id
+    string userId = 2; // 用户系统id
+    int32 accountId = 3; // 账号id
+    string nickname = 4; // 昵称
+    string avatarUrl = 5; // 头像
+    string thought = 6; // 动态内容
+    string pictureUrl = 7; // 图片列表
+    int64 publishTime = 8; // 发布时间戳
+}
+
+// 动态详情请求
+message MomentDetailReq {
+    string momentId = 1; // 动态id
+}
+// 动态详情响应
+message MomentDetailRes {
+    MomentVo moment = 1; // 动态信息
+}
+
+//  加载评论列表请求
+message LoadCommentsReq {
+    string momentId = 1; // 动态id
+    int32 current = 2; // 当前页
+    int32 size = 3; // 每页数量
+}
+// 加载评论列表响应
+message LoadCommentsRes {
+    repeated CommentVo commentList = 1; // 评论列表
+}
+// 评论信息
+message CommentVo {
+    string commentId = 1; // 评论ID
+    string content = 2; // 评论内容
+    int32 applaudCount = 3; // 点赞数量
+    int32 ownApplaud = 4; // 自己是否点赞(0.未点赞 1.已点赞)
+    int64 publishTime = 5; // 发布时间戳
+    Sender sender = 6; // 发送者信息
+    AtComment atComment = 7; // @某人信息
+}
+// @某人信息
+message AtComment {
+    int32 atCommentId = 1; // @某人的评论Id
+    string atNickname = 2; // @某人的昵称
+    string atUserId = 3; // @某人的用户Id
+    string atContent = 4; // @内容
+}
+// 发送者信息
+message Sender {
+    string userId = 1; // 用户系统id
+    string nickname = 2; // 用户昵称
+    string avatarUrl = 3; // 用户头像
+    Gender gender = 4; // 性别
+}
+
+// 我的/指定用户/标签/关注的人动态列表请求
+message PersonMomentsReq {
+    int32 getType = 1; // 查询类型（0.我的 1.查询指定用户 2.标签类型获取动态  3.关注的人动态）
+    string targetUserId = 2; // 目标用户Id(getType=1时不能为空)
+    string tagTitle = 3; // 指定标签标题(getType=2时不能为空)
+    string topMomentId = 4; // 本地第一个动态Id,见direction
+    string bottomMomentId = 5; // 本地最后一个动态id,见direction
+    int32 direction = 6; // 0:加载bottomMomentId(不含)后面的内容,1:加载topMomentId(不含)前面的内容,为空则从第一个开始加载
+    int32 current = 7; // 当前页数
+    int32 size = 8; // 每页数量大小
+    int32 type = 9;//动态类型（0图文 1视频 2音频）（-1默认查询全部）
+    int64 currentMomentId = 10; //查看视频详情传入当前的动态ID
+    int32 topicId = 11;//话题id(getType=2时传)
+}
+// 我的/指定用户/标签/关注的人动态列表响应
+message PersonMomentsRes {
+    repeated MomentVo moments = 1; // 动态信息列表
+    int32 hasNew = 2; // 是否有新动态, 0:没有 1:有
+    int32 totalSize = 3; // 数量
+}
+
+// 点赞动态/评论请求
+message ApplaudReq {
+    string momentId = 1; // 动态id
+    int32 liking = 2; // 点赞类型 0:取消点赞, 1:点赞
+    string commentId = 3; // 评论id,如果是空,则赞的是动态,否则是赞某个评论
+}
+// 点赞动态/评论响应
+message ApplaudRes {
+}
+
+// 评论动态请求
+message MakeCommentReq {
+    string momentId = 1; // 动态id
+    string content = 2; // 评论内容
+    string atUserId = 3; // 非必传
+    string atCommentId = 4; // 非必传
+}
+// 评论动态响应
+message MakeCommentRes {
+    Sender sender = 1; // 发送者
+    string commentId = 2; // 评论id
+    int32 applaudCount = 3; // 点赞数
+    string content = 4; // 评论内容
+    int32 ownApplaud = 5; // 自己是否点赞(0.未点赞 1.已点赞)
+    int64 publishTime = 6; // 评论时间戳
+    AtComment atComment = 7; // @某人信息
+}
+
+// 发布动态请求
+message PublishMomentReq {
+    string thought = 1; // 内容
+    repeated string pictureUrls = 2; // 图片列表
+    repeated string tags = 3; // 标签Id列表
+    string longitude = 4; // 经度
+    string latitude = 5; // 纬度
+    string location = 6; // 定位
+    int32 type = 7;//动态类型（0图文 1视频 2音频）（-1默认查询全部）
+    string resourceUrl = 8;// 视频/音频资源地址
+    int32 duration = 9;//资源时长(秒)
+    int64 resourceSize = 10;//视频/资源大小(字节)
+    int32 width = 11;//视频宽(像素)
+    int32 height = 12;//视频高(像素)
+    int32 rotationAngle = 13;//视频封面需要旋转的角度（无旋转传0）
+}
+// 发布动态响应
+message PublishMomentRes {
+    int64 momentId = 1; // 动态id
+    string thought = 2; // 动态内容
+    repeated string pictureUrls = 3; // 图片列表
+    repeated Tag tagsList = 4; // 标签列表
+    Publisher publisher = 5; // 发布者用户信息
+    int32 applaudCount = 6; // 点赞数量
+    int32 commentCount = 7; // 评论数量
+    int32 followed = 8; // 是否关注可以关注 0:可关注,1:不可关注(已关注或者是自己)
+    int64 publishTime = 9; // 发布时间戳
+    string resourceUrl = 10;// 视频/音频资源地址
+    string coverUrl = 11;// 视频/音频资源地址
+    int32 duration = 12;//资源时长(秒)
+    int64 resourceSize = 13;//视频/资源大小(字节)
+    int32 width = 14;//视频宽(像素)
+    int32 height = 15;//视频高(像素)
+}
+
+// 删除动态请求
+message DeleteMomentReq {
+    int64 momentId = 1; // 动态id
+}
+// 删除动态响应
+message DeleteMomentRes {
+}
+
+// 删除动态评论请求
+message DeleteCommentReq {
+    string momentId = 1; // 动态id
+    string commentId = 2; // 评论id
+}
+// 删除动态评论响应
+message DeleteCommentRes {
+}
+
+// 加载互动信息列表请求
+message LoadInteractionsReq {
+    int32 current = 1; // 页数
+    int32 size = 2; // 每页数量
+    int32 getType = 3;//类型,11=点赞,12=评论,13=关注
+}
+// 加载互动信息列表响应
+message LoadInteractionsRes {
+    repeated InteractionVo interactionList = 1; // 互动消息列表
+}
+
+// 获取标签列表请求
+message LoadTagsReq {
+    int32 current = 1; // 页数
+    int32 size = 2; // 每页数量
+    string searchStr = 3; // 搜索关键字
+}
+// 获取标签列表响应
+message LoadTagsRes {
+    repeated Tag tagsList = 10; // 标签列表
+}
+
+// 获取推荐动态列表请求
+message LoadRecommendMomentsReq {
+    int32 size = 1; // 每页数量
+    int32 direction = 2; // 0: 加载bottomMomentId(不含)后面的内容，1: 加载topMomentId(不含)前面的内容,为空则从第一个开始加载
+    string bottomMomentId = 3; // 本地最后一个动态id,见direction
+    Gender gender = 4; // 性别
+    int32 topicId = 5;//话题id
+    string topMomentId = 6; // 本地第一个动态Id,见direction
+    int32 type = 7;//动态类型（0图文 1视频 2音频）（-1默认查询全部）
+    int64 currentMomentId = 8; //查看视频详情传入当前的动态ID
+    int32 current = 9;//当前页
+}
+// 获取推荐动态列表响应
+message LoadRecommendMomentsRes {
+    repeated MomentVo moments = 1; // 动态信息列表
+    int32 hasNew = 2; // 是否有新动态, 0:没有 1:有
+    int32 totalSize = 3; // 数量
+}
+
+// 获取推荐话题列表请求
+message LoadRecommendTopicReq {
+}
+// 获取推荐话题列表响应
+message LoadRecommendTopicRes {
+    repeated RecommendTopicList recommendTopicList = 1; // 推荐话题列表
+}
+// 推荐话题列表
+message RecommendTopicList {
+    int32 topicId = 1; // 话题id
+    string topicName = 2; // 话题名称
+    int32 momentCount = 3; // 动态数量
+    int32 applaudCount = 4; // 点赞数量
+    repeated string pictureUrlList = 5; // 图片列表，最多四张，最少0张
+}
+
+// 根据话题获取动态请求
+message LoadTopicMomentReq {
+    int32 size = 1; // 每页数量
+    int32 direction = 2; // 0: 加载bottomMomentId(不含)后面的内容，1: 加载topMomentId(不含)前面的内容,为空则从第一个开始加载
+    string bottomMomentId = 3; // 本地最后一个动态id,见direction
+    int32 topicId = 4; // 话题id
+    int32 momentType = 5; // 动态类型,0:推荐动态 1:最新动态
+    string topMomentId = 6; // 本地第一个动态Id,见direction
+    int32 type = 7;//动态类型（0图文 1视频 2音频）（-1默认查询全部）
+    int64 currentMomentId = 8; //查看视频详情传入当前的动态ID
+}
+// 根据话题获取动态响应
+message LoadTopicMomentRes {
+    repeated MomentVo moments = 1; // 动态信息列表
+    int32 totalSize = 2; // 数量
+}
+
+// 将互动消息设置为已读请求
+message ReadInteractionsReq {
+    int32 getType = 3;//类型,11=点赞,12=评论,13=关注
+}
+// 将互动消息设置为全部已读响应
+message ReadInteractionsRes {
+}
+
+// 检查动态消息请求
+message CheckMomentMessageReq {
+}
+// 检查动态消息响应
+message CheckMomentMessageRes {
+    int32 hasNew = 1; // 是否有新动态消息通知,0:否,1:是
+    int32 count = 2; // 互动消息数量
+    repeated Tag topicList = 3; // 话题列表
+    int32 likeCount = 4; // 点赞未读数
+    int32 commentCount = 5; // 评论未读数
+    int32 followCount = 6; // 关注未读数
+}
+
+// 获取话题详情请求
+message TopicDetailReq {
+    int32 topicId = 1; // 话题id
+}
+// 获取话题详情响应
+message TopicDetailRes {
+    Tag momentTag = 1; // 话题详情
+}
+
+// 优质推荐房间请求
+message RecommendChannelReq {
+    int32 current = 1; // 页数
+    int32 size = 2; // 每页数量
+}
+// 优质推荐房间响应
+message RecommendChannelRes {
+    int32 total = 1; // 总数
+    int32 size = 2; // 每页数量
+    int32 current = 3; // 当前页
+    repeated RecommendChannel records = 4; // 房间列表数据
+}
+// 推荐房间数据
+message RecommendChannel {
+    string channelId = 1; // 房间id
+    string name = 2; // 名称
+    string avatarUrl = 3; // 头像
+    int32 lockedStatus = 4; // 是否上锁, 0:否 1:是
+}
+
+// 话题广场列表请求
+message TopicPlazaReq {
+    int32 current = 1; // 页数
+    int32 size = 2; // 每页数量
+}
+// 话题广场列表响应
+message TopicPlazaRes {
+    repeated Tag topicList = 1; // 话题列表
+}
+
+// 加载动态视频列表请求
+message LoadMomentVideoReq {
+    int32 size = 1; // 每页数量大小
+    int32 direction = 2; // 0: 加载bottomMomentId（不含）后面的内容,1: 加载topMomentId（不含）前面的内容,为空则从第一个开始加载
+    string bottomMomentId = 3; // 本地最后一个动态id,见direction
+    Gender gender = 4; // 性别
+    int64 currentMomentId = 5; //查看视频详情传入当前的动态ID
+    string topMomentId = 6; // 本地第一个动态Id,见direction
+}
+
+
+// 检测动态用户所在房间状态列表请求
+message MomentStatusListReq {
+    repeated string userIds = 1; // 用户Id列表
+}
+// 检测动态用户所在房间状态列表响应
+message MomentStatusListRes {
+    repeated MomentStatusVo momentStatusList = 1; // 动态-所在房间状态列表
+}
+
+// 动态-所在房间状态
+message MomentStatusVo {
+    string userId = 1; // 用户Id
+    string channelId = 2;//房间Id
+    int32 lockedStatus = 3;//是否上锁, 0:否 1:是
+}

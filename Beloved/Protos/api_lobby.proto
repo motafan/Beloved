@@ -1,0 +1,196 @@
+syntax = "proto3";
+
+option swift_prefix = "OS";
+option java_multiple_files = true;
+package com.mm.proto;
+import "api_common.proto";
+
+
+// 大厅相关请求
+message LobbyRequest {
+    oneof body {
+        PageReq bannerReq = 1; // 首页轮播图请求
+        PageReq channelListReq = 2; // 首页房间列表请求
+        GloryRanksReq gloryRanksReq = 3; // 排行榜请求
+        MenuReq menuReq = 4; // 菜单请求
+        LobbyInfoReq lobbyInfoReq = 5; // 获取首页信息请求
+        TopChannelListReq topChannelListReq = 6; // 优质房间(置顶房间)请求
+        PageReq channelList2Req = 7; // 首页房间列表请求(IOS用)
+        PublicChannelReq publicChannelReq = 8; // 根据菜单随机获取公开厅房间请求
+        LobbyChannelReq channelList3Req = 9; // 首页房间列表请求（最新）
+    }
+}
+
+// 大厅相关响应
+message LobbyResponse {
+    oneof body {
+        BannerRes bannerRes = 1; // 首页轮播图响应
+        ChannelListRes channelListRes = 2; // 首页房间列表响应
+        GloryRanksRes gloryRanksRes = 3; // 排行榜响应
+        MenuRes menuRes = 4; // 菜单响应
+        LobbyInfoRes lobbyInfoRes = 5; // 获取首页信息响应
+        TopChannelListRes TopChannelListRes = 6; // 优质房间(置顶房间)响应
+        ChannelList2Res channelList2Res = 7; // 首页房间列表响应(IOS用)
+        PublicChannelRes publicChannelRes = 8; // 根据菜单随机获取公开厅房间响应
+        ChannelList3Res channelList3Res = 9; // 首页房间列表请求（最新）
+    }
+}
+
+// 首页轮播图响应
+message BannerRes {
+    int32 total = 1; // 总数
+    int32 size = 2; // 每页数量
+    int32 current = 3; // 当前页
+    repeated BannerRecord records = 4; // 轮播图信息
+}
+// 轮播图信息
+message BannerRecord {
+    int32 id = 1; // 轮播图id
+    string barnerTitle = 2; // 轮播图名称
+    int32 barnerLinkType = 3; // 跳转类型,1:房间 2：浏览器 3：荣耀榜
+    string barnerLinkValue = 4; // 跳转内容
+    string barnerImgUrl = 5; // 图片地址
+    int32 status = 6; // 状态
+    int32 sort = 7; // 排序
+}
+
+// 首页房间列表响应
+message ChannelListRes {
+    int32 total = 1; // 总数
+    int32 size = 2; // 每页数量
+    int32 current = 3; // 当前页
+    repeated ChannelList records = 4; // 房间列表数据
+}
+// 房间列表数据
+message ChannelList {
+    int32 channelNo = 1; // 房间号,展示用
+    string channelId = 2; // 房间id
+    string channelName = 3; // 房间名称
+    string avatarUrl = 4; // 头像
+    ChannelType channelType = 5; // 类型
+    string ownerId = 6; // 房主id
+    int32 onlineNumber = 7; // 在线人数
+    int32 lockedStatus = 8; // 是否上锁 0:未上锁 1:已上锁
+    string coverUrl = 10; // 房间背景(可为空)
+    string cornerBg = 11; // 房间角标(可为空)（过时）
+    string cornerContent = 13; // 角标文案(可为空)（过时）
+    repeated UserInSeats userInSeats = 12; // 麦位用户信息
+    int32 pkStatus = 14; // pk状态 0无pk 1正在pk
+    string labelName = 9; // 标签名
+    string labelBackgroundImg = 15; // 房间角标背景(可为空)
+    string ownerNickname = 16; //房主昵称
+    string ownerAvatarUrl = 17;// 房主头像地址
+}
+
+message LobbyChannelReq {
+    int32 current = 1; // 第几页
+    int32 size = 2; // 页大小
+    int32 menuid = 3; //菜单id
+}
+
+// 首页房间列表响应(IOS用)
+message ChannelList2Res {
+    int32 total = 1; // 总数
+    int32 size = 2; // 每页数量
+    int32 current = 3; // 当前页
+    repeated ChannelList records = 4; // 房间列表数据
+}
+
+// 首页房间列表响应
+message ChannelList3Res {
+    int32 total = 1; // 总数
+    int32 size = 2; // 每页数量
+    int32 current = 3; // 当前页
+    repeated ChannelList records = 4; // 房间列表数据
+}
+
+// 排行榜请求
+message GloryRanksReq {
+    LobbyRankType searchType = 1; // 排行榜类型
+    LobbyRankDateRange dateRangeType = 2; // 时间范围类型
+}
+// 排行榜响应
+message GloryRanksRes {
+    repeated Rank ranks = 1; // 用户排行榜列表
+    Rank myRank = 2; // 个人排行榜
+}
+// 用户排名信息
+message Rank {
+    int32 rank = 1; // 排名
+    string name = 2; // 用户昵称、房间昵称
+    string channelId = 3; // 房间id
+    string userId = 4; // 用户Id
+    int32 accountId = 5; // yoni号，魅力、财富榜返回
+    string avatarUrl = 6; // 用户头像地址、房间头像地址
+    int64 gloryValue = 7; // 魅力值/财富值
+    string selfRank = 8; // 个人排名
+    string channelPwd = 9; // 房间密码
+    int32 lockedStatus = 10; // 是否是密码房(0:不是 1:是)
+    int32 diamondValue = 11; // 钻石数量
+    string computeTime = 12; // 计算日期
+    int32 display = 13; // 是否显示个人排名 0：不显示 1：显示
+    int32 onList = 14; // 是否上榜，0：未上榜，1：上榜 用来区分魅力值文案
+    int64 gapGloryValue = 15; // 与上一名相差多少/距上榜还差多少,用户自己排名时才返回
+}
+
+// 菜单请求
+message MenuReq {
+    string channelId = 1; // 房间id
+}
+// 菜单响应
+message MenuRes {
+    repeated Menu menuList = 1; // 父菜单列表
+}
+// 菜单信息
+message Menu {
+    int32 menuId = 1; // 菜单id
+    string name = 2; // 菜单名称
+    string iconUrl = 3; // 图标
+    ChannelType menuClass = 4; // 房间模式
+    string description = 5; // 描述
+    repeated Menu children = 6; // 子菜单列表
+    string iconUrl2 = 7; // 图标2
+}
+
+// 获取首页信息请求
+message LobbyInfoReq {
+}
+// 获取首页信息响应
+message LobbyInfoRes {
+    repeated LobbyMenu lobbyMenu = 1; // 菜单列表
+    repeated GloryRank wealthRanks = 2; // 排行榜列表
+}
+// 菜单信息
+message LobbyMenu {
+    int32 menuid = 1; // 菜单id
+    string menuclass = 2; // 模式
+    string menudesc = 3; // 菜单名称
+    string iconUrl = 4; // 图标
+}
+// 排行榜信息
+message GloryRank {
+    string userId = 1; // 用户系统id
+    int32 accountId = 2; // 用户账号
+    string name = 3; // 用户昵称
+    string avatarUrl = 4; // 头像
+    int32 rank = 5; // 排名
+    int32 gloryValue = 6; // 财富值/魅力值
+}
+
+// 置顶房间请求
+message TopChannelListReq {
+}
+// 置顶房间响应
+message TopChannelListRes {
+    repeated ChannelList channelList = 1; // 房间列表
+}
+
+// 根据菜单随机获取公开厅房间请求
+message PublicChannelReq {
+    int32 menuId = 1; // 菜单id
+}
+// 根据菜单随机获取公开厅房间响应
+message PublicChannelRes {
+    string channelId = 1; // 房间id
+}
+

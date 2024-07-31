@@ -1,0 +1,250 @@
+syntax = "proto3";
+
+option swift_prefix = "OS";
+option java_multiple_files = true;
+package com.mm.proto;
+
+import "api_main.proto";
+import "api_common.proto";
+import "app_game_message.proto";
+
+// ===================================
+// CallApp
+message CallAppReq {
+  oneof request {
+    // Common
+    GetServerInfoReq getServerInfo = 1;
+    GetUserInfoReq getUserInfo = 2;
+
+    // Store
+    GetRoleHandPositionReq getRoleHandPosition = 3;
+
+    // Zone2D
+    GetZone2DSafeAreaReq getZone2DSafeArea = 4;
+  }
+}
+
+message CallAppRes {
+  oneof response {
+    // Common
+    GetServerInfoRes getServerInfo = 1;
+    GetUserInfoRes getUserInfo = 2;
+
+    // Store
+    GetRoleHandPositionRes getRoleHandPosition = 3;
+
+    // Zone2D
+    GetZone2DSafeAreaRes getZone2DSafeArea = 4;
+  }
+}
+
+message GetServerInfoReq {
+}
+
+message GetServerInfoRes {
+  string url = 1;
+}
+
+message GetUserInfoReq {
+}
+
+message GetUserInfoRes {
+  string userId = 1;
+  RequestHeader requestHeader = 2;
+}
+
+// 获取我的页面角色手摆位Y坐标
+message GetRoleHandPositionReq {
+}
+
+message GetRoleHandPositionRes {
+  float handPos = 1;
+}
+
+// 获取app推荐unity的安全区域
+message GetZone2DSafeAreaReq {
+}
+
+message GetZone2DSafeAreaRes {
+  int32 minPosY = 1;
+  int32 maxPosY = 2;
+}
+
+// ===================================
+// NotifyApp
+message NotifyApp {
+  oneof notify {
+    // Common
+    OnUnityInited unityInited = 1;
+    OnUnityModeChanged unityModeChanged = 2;
+
+    // Store
+    OnJoinDressModel joinDressMode = 3;
+    OnExitDressModel exitDressMode = 4;
+    OnUpdateMetaAvatar updateMeatAvatar = 5;
+
+    // Zone2D
+    OnUnity2dClickSeat unity2dClickSeat = 6;
+    OnQuitZone2DStore quitZone2DStore = 7;
+  }
+}
+
+// Unity初始化完成
+message OnUnityInited {
+}
+
+message OnUnityModeChanged {
+  UnityMode mode = 1;
+  RoleMode roleMode = 2;              // 个人形象返回Role模式
+  Zone2DRegion zone2DRegion = 3;      // 切换到zone2D模式返回的位置信息
+}
+
+// Unity已进入装扮编辑模式
+message OnJoinDressModel {
+}
+
+// Unity已退出装扮编辑模式
+message OnExitDressModel {
+}
+
+// 我的形象图片更新
+message OnUpdateMetaAvatar {
+  string imgPath = 1;
+}
+
+// 在Unity2D房间中，点击麦位
+message OnUnity2dClickSeat {
+  int32 seatIndex = 1;
+}
+
+// unity退出了2d房内的商城
+message OnQuitZone2DStore {
+}
+
+// ===================================
+// CallUnity
+message CallUnityReq {
+  oneof request {
+    SwitchUnityModeReq switchUnityMode = 1;
+    UserSelfModifiedReq userSelfModified = 9;
+
+    // Zone2D
+    ReceiveSeatInfoOfUnity2DReq receiveSeatInfoOfUnity2D = 2;
+    ReceiveVolumeInfoOfUnity2DReq receiveVolumeInfoOfUnity2D = 3;
+    QuitZone2DReq quitZone2D = 4;
+    Zone2DPlayAnimReq zone2DPlayAnim = 5;
+    Zone2DSendGiftReq zone2DSendGift = 6;
+    Zone2DOpenStoreReq zone2DOpenStore = 7;
+    Zone2DQuitStoreReq zone2DQuitStore = 8;
+  }
+}
+
+// 切换Unity显示模式
+message SwitchUnityModeReq {
+  UnityMode mode = 1;
+  RoleMode roleMode = 2;
+  Zone2DInfo zone2DInfo = 3;
+}
+
+message UserSelfModifiedReq {
+}
+
+// 传给Unity麦位数据
+/*
+UserInSeats.channelPowerType: 1-房主, 2-超管, 3-管理员, 4-普通, 5-公会会长, 6-黑名单
+UserInSeats.status: 0-lock, 1-normal, 2-mute, 3-lockAndMute
+*/
+message ReceiveSeatInfoOfUnity2DReq {
+  repeated Zone2DSeatInfo seatInfos = 1;   // 麦位列表信息
+}
+
+// 传给Unity麦位音量数据
+message ReceiveVolumeInfoOfUnity2DReq {
+  repeated SeatVolumeInfo seatVolumeInfos = 1;
+}
+
+// 通知Unity退出混合模式房间
+message QuitZone2DReq {
+}
+
+// 调用unity播放麦位角色动作
+message Zone2DPlayAnimReq {
+  int32 seatIndex = 1;
+  string expressionId = 2;
+}
+
+// 调用unity播互动礼物表现
+message Zone2DSendGiftReq {
+  int32 senderSeatIndex = 1;
+  repeated int32 targetsSeatIndex = 2;
+  GiftEffect giftEffect = 3;
+}
+
+// App在Zone2D房点了商城按钮
+message Zone2DOpenStoreReq {
+}
+
+// App在Zone2D房退出商城按钮(安卓用, 手势返回退出)
+message Zone2DQuitStoreReq {
+}
+
+// Uniyt的显示模式
+enum UnityMode {
+  none = 0;
+  init = 1;
+  role = 2;
+  zone2D = 3;
+}
+
+// 商城的角色显示模式
+enum RoleMode {
+  dontCare = 0;
+  small = 1;      // 小
+  big = 2;        // 大
+  body = 3;       // 五官商城
+  dress = 4;      // 衣服商城
+  exit = 5;       // 退出
+}
+
+message Zone2DInfo {
+  string uniCode = 1;
+  int32 isOpenChannel = 2;
+  string channelID = 3;
+}
+
+message Zone2DRegion {
+  Zone2DSafeArea safeArea = 1;
+  repeated IntVec2 seatGiftPositions = 2;     // 麦位接受礼物的屏幕坐标(像素坐标, 左上角为原点)
+}
+
+message Zone2DSafeArea {
+  int32 minPosY = 1;
+  int32 maxPosY = 2;
+}
+
+message IntVec2 {
+  int32 x = 1;
+  int32 y = 2;
+}
+
+// 麦位音量信息
+message SeatVolumeInfo {
+  int32 accountId = 1;
+  int32 volume = 2;
+}
+
+// 互动礼物特效
+//message GiftEffect {
+//  int32 senderExpressionId = 1;
+//  int32 acceptExpressionId = 2;
+//  int32 interactionType = 3;  //用来区分 客户端怎么实现送礼效果表现
+//  string effectName = 4;    // 特效名字 _0 代表起始位置的特效 _1代表飞行轨迹特效  _2代表到达目的地特效
+//  int32 sendVFX = 5;
+//  int32 acceptVFX = 6;
+//}
+
+message Zone2DSeatInfo {
+  int32 seatIndex = 1;
+  int32 seatStatus = 2;
+  UserInSeats userInSeats = 3;
+}

@@ -1,0 +1,295 @@
+syntax = "proto3";
+
+import "common.proto";
+
+option java_package = "com.xbyy.game.proto";
+option swift_prefix = "ST";
+
+// 房间火箭信息
+message RocketNotification {
+  int32 count = 1; // 达到顶级次数，不为空，默认为0
+  int32 currentLevel = 2; // 当前等级，不为空，默认为0
+  int32 totalLevel = 3; // 总等级
+  int32 diffValue = 4; // 距离下一等级还差多少值
+  int64 createTimeStamp = 5; // 创建时间戳(秒)
+  int64 expireTimeStamp = 6; // 过期时间戳(秒)
+  int64 currentTimeStamp = 7; // 服务器当前时间戳(秒)
+  string channelId = 8; // 房间id
+  string userId = 9; // 用户id
+  string nickname = 10; // 用户昵称
+  string avatarUrl = 11; // 用户头像
+  string iconUrl = 12; // 火箭图标
+  string animationUrl = 13; // 火箭动画
+  int32 showLabel = 14; // 是否显示新征程标签;0=不显示，1=显示
+  int32 height = 15; // icon的高度
+  int32 currentLevelMaxValue = 16; // 当前等级的最大值
+}
+// 通用消息推送
+message CommonNotification {
+  CommonBanner commonBanner = 1;
+}
+
+// 通用横幅消息推送
+message CommonBanner {
+  int32 source = 1;     // 来源,0宝箱抽奖;1宝箱稀有礼物;2宝箱兑换礼物;10火箭
+  string channelId = 2;
+  string userId = 3;
+  int32 accountId = 4;
+  string nickName = 5;
+  string avatarUrl = 6;
+  string bannerContent = 7;
+  string bannerStyle = 8;
+  int64 createTime = 9;
+  int32 showBanner = 10;  // 是否显示指定频道的横幅(0.否,1.是)
+  int32 bannerGlobal = 11; // 是否全频道显示横幅(0.否,1.是)
+  int32 showChat = 12;  // 是否显示在指定频道的公屏内(0.否,1.是)
+  int32 chatGlobal = 13; // 是否全频道显示在公屏内(0.否,1.是)
+}
+
+// 房间模块
+message ChannelResponse {
+  oneof notification {
+      ChannelWarningBanner channelWarningBanner = 1; // 房间警告横幅
+      ChannelGameNotice channelGameNotice = 2; // 游戏提示
+      SeatLayoutNotification seatLayoutNotification = 3; // 麦位布局通知
+      AskPkNotification askPkNotification = 4; // 发起PK通知
+      StartPkNotification startPkNotification = 5; // 开始PK通知
+      RefusePkNotification refusePkNotification = 6; // 拒绝PK通知
+      RefreshPkNotification refreshPkNotification = 7; // 刷新PK数据通知
+      FinishPkNotification finishPkNotification = 8; // 结束PK通知
+      ChannelInfoNotification channelInfoNotification = 9; // 房间基本信息通知
+      OperateUserNotification operateUserNotification = 10; // 操作用户通知
+      RemoveUserNotification removeUserNotification = 11; // 移出房间通知
+      CommonBannerNotification commonBannerNotification = 12; // 通用横幅通知
+  }
+}
+
+// 全服霸屏特效
+message FullScreenEffectLocation {
+  string srcTag = 1;
+  string srcType = 2;
+  string value = 3;
+}
+
+message FullScreenEffect {
+  string title = 1;    //名称
+  string effectsUrl = 2; //动效地址
+  string bannerUrl = 3;   //banner地址
+  repeated FullScreenEffectLocation locationInfo = 4;  //mp4里的用户位置信息
+  int32 linkType = 5; //banner跳转类型，1=跳转房间，2=跳转网页，3=个人主页
+  string linkValue = 6; //banner跳转内容
+  string content = 7;
+}
+
+// 房间警告横幅推送
+message ChannelWarningBanner {
+  string channelId = 1; // 房间id
+  string bannerContent = 2; // 横幅内容
+}
+
+// 游戏提示
+message ChannelGameNotice {
+  string content = 1; // 浮窗提示内容
+  int32 duration = 2; // 持续时长，单位秒
+  int32 lotteryType = 3; // 抽奖类型
+}
+
+// 麦位布局通知
+message SeatLayoutNotification {
+  int32 seatLayout = 1; // 麦位布局 1:横向排列(传统布局) 2:纵向排列(聊天模式)
+}
+
+// 发起PK通知
+message AskPkNotification {
+  string channelId = 1; // 发起房间id
+  string targetChannelId = 2; // 目标房间id
+  int32 duration = 3; // pk时长
+  string topic = 4; // pk话题
+  string channelName = 5; // 房间名称
+  string avatarUrl = 6; // 房间头像
+}
+
+// 开始PK通知
+message StartPkNotification {
+  PkGame pkGame = 1; // pk信息
+}
+
+// 拒绝PK通知
+message RefusePkNotification {
+  string content = 1; // 拒绝提示信息
+}
+
+// 刷新PK数据通知
+message RefreshPkNotification {
+  PkGame pkGame = 1; // pk信息
+}
+
+// 结束PK通知
+message FinishPkNotification {
+  PkGame pkGame = 1; // pk信息
+}
+
+// PK信息
+message PkGame {
+  string channelId = 1; // 房间id
+  string pkRoundId = 2; // pk回合id
+  string topic = 3; // pk话题
+  PkType type = 4; // PK类型
+  int32 duration = 5; // 时长
+  int32 blueTeamScore = 6; // 蓝方分数
+  int32 redTeamScore = 7; // 红方分数
+  int64 createTime = 8; // 开始时间
+  int64 endTime = 9; // 结束时间
+  repeated ParticipantVo participants = 10; // 1v1或团战4v4时代表参与者列表,跨厅时代表红方参与者列表
+  repeated ParticipantVo blueParticipants = 11; // 蓝方参与者列表(跨厅pk返回)
+  repeated PkBossUserVo pkBossUsers = 12; // 1v1或团战4v4时代表送礼老板列表,跨厅时代表红方老板列表
+  repeated PkBossUserVo bluePkBossUsers = 13; // 蓝方老板列表(跨厅pk返回)
+  PkChannelInfoVo redChannelInfo = 14; // 红方房间信息(跨厅pk返回)
+  PkChannelInfoVo blueChannelInfo = 15; // 蓝方房间信息(跨厅pk返回)
+  int32 status = 16; // pk状态 0已结束 1进行中
+  int64 systemTime = 17; // 系统当前时间
+  //ChannelPkVo targetChannelInfo = 18; // 其他房间信息（个播返回）
+  repeated UserInSeats redUserInSeats = 18; // 红方房间麦位列表信息（跨厅pk个播房间返回）
+  repeated UserInSeats blueUserInSeats = 19; // 蓝方房间麦位列表信息（跨厅pk个播房间返回）
+}
+
+// 房间Pk信息（暂不使用）
+message ChannelPkVo {
+  int32 channelNo = 1; // 房间号
+  string channelId = 2; // 房间Id
+  string channelName = 3; // 房间名称
+  ChannelType channelType = 4; // 房间模式类型
+  string ownerId = 5; // 房主Id
+  string avatarUrl = 6; // 房间头像
+  int32 lovenum = 7; // 心动值
+  //repeated UserInSeats userInSeats = 8; // 麦位列表信息
+}
+
+// 参与者信息
+message ParticipantVo {
+  string pkChannelId = 1; // pk房间id
+  string pkId = 2; // pk回合id
+  PkTeam team = 3; // pk队伍
+  string userId = 4; // 用户系统id
+  int32 accountId = 5; // 用户账号id
+  string nickname = 6; // 用户昵称
+  string avatarUrl = 7; // 用户头像
+  int32 lovenum = 8; // 心动值
+  //Gender gender = 9; // 性别,长连接也存在该字段,不兼容
+}
+// 跨厅房间信息
+message PkChannelInfoVo {
+  string channelId = 1; // 房间id
+  int32 channelNo = 2; // 房间号
+  string channelName = 3; // 房间名称
+  string avatarUrl = 4; // 头像
+  string ownerId = 5; // 房主Id
+  int32 seat0Status = 6; // 0号麦位锁状态
+  int32 seat1Status = 7; // 1号麦位锁状态
+  int32 seat2Status = 8; // 2号麦位锁状态
+  int32 seat3Status = 9; // 3号麦位锁状态
+  int32 seat4Status = 10; // 4号麦位锁状态
+  int32 seat5Status = 11; // 5号麦位锁状态
+  int32 seat6Status = 12; // 6号麦位锁状态
+  int32 seat7Status = 13; // 7号麦位锁状态
+  int32 seat8Status = 14; // 8号麦位锁状态
+  int32 seatsSwitch = 15; // 观众席开关 0关1开
+  int32 seatCount = 16; // 麦位数量
+}
+// 送礼老板信息
+message PkBossUserVo {
+  string userId = 1; // 用户系统id
+  int32 accountId = 2; // 用户账号id
+  string nickname = 3; // 昵称
+  string avatarUrl = 4; // 头像
+  int32 value = 5; // 礼物价值
+  PkTeam team = 6; // pk队伍
+}
+// PK队伍
+enum PkTeam {
+  TEAM_UNKNOWN = 0;
+  BLUE = 1; // 蓝方
+  RED = 2; // 红方
+}
+// PK类型
+enum PkType {
+  ONE_TO_ONE = 0; // 1v1
+  MANY_TO_MANY = 1; // 团战PK4v4
+  CHANNEL_TO_CHANNEL = 2; // 跨厅PK
+}
+
+// 房间基本信息通知
+message ChannelInfoNotification {
+  ChannelVo channel = 1; // 房间信息
+  ChannelSettingVo channelSetting = 2; // 房间设置信息
+  ChannelOtherVo other = 3; // 房间其他配置信息
+  UserInSeatVo userInSeatInfo = 4; // 麦位列表信息
+}
+
+// 操作用户通知
+message OperateUserNotification {
+  OperateUserType operateUserType = 1; // 操作用户类型
+  string userId = 2; // 操作者
+  string nickname = 3; // 操作者昵称
+  string targetId = 4; // 被操作者
+  string targetNickname = 5; // 被操作者昵称
+}
+
+// 移出房间通知
+message RemoveUserNotification {
+  RemoveUserType removeUserType = 1; // 移出用户类型
+  string userId = 2; // 操作者
+  string nickname = 3; // 操作者昵称
+  string targetId = 4; // 被移出者
+  string targetNickname = 5; // 被移出者昵称
+}
+
+// 通用横幅通知
+message CommonBannerNotification {
+  repeated CommonBannerVo commonBannerList = 1; // 横幅列表
+}
+// 通用横幅信息
+message CommonBannerVo {
+  BannerType bannerType = 1; // 横幅类型
+  string bannerStyle = 2; // 横幅样式
+  string bannerContent = 3; // 横幅内容(HTML文本)
+  string channelId = 4; // 房间Id
+  string userId = 5; // 用户Id （bannerType==3时有值返回表示用户不在房间内，可跳转用户主页）
+  int32 lockedStatus = 6;// 房间是否上锁 0未上锁 1已上锁
+}
+
+// 动作表情消息通知
+message ExpressionNotification{
+  string channelId = 1; // 所在频道id
+  string targetId = 2;//目标id
+  string expressionId = 3;//动作表情id
+}
+
+// 房间心愿礼物通知信息
+message WishGiftNotification{
+  int32 finish= 1;
+  int32 userCount= 2;
+  int32 wishSwitch= 3;
+  string channelId= 4;
+  int32 maxLimitValue= 5;
+  repeated WishGiftProgress progressList= 100;
+  repeated GiftTopUser topUser= 101;
+}
+
+message WishGiftProgress {
+  int32 finishCount = 1;
+  int32 giftCount = 2;
+  int32 giftId= 3;
+  string iconUrl= 4;
+  string name= 5;
+  string cornerIcon= 6;
+  string effects= 7;
+  int32 maxLimitValue= 8;
+  int32 timedCornerMark= 9;
+  int32 value= 10;
+  int32 finish= 11;
+  int32 wishSwitch= 12;
+  int32 giftType= 13;
+  string bannerContent=14;
+}
+

@@ -1,0 +1,147 @@
+syntax = "proto3";
+
+option swift_prefix = "OS";
+option java_multiple_files = true;
+package com.mm.proto;
+import "api_common.proto";
+
+// 玩法相关请求
+message PlayRequest {
+  oneof body {
+    CollectHallInfoReq collectHallInfoReq = 1; // 礼物藏馆信息请求
+    CollectHallSeriesReq collectHallSeriesReq = 2; // 用户主页系列列表请求
+    CollectHallSeriesGiftsReq CollectHallSeriesGiftsReq = 3; // 限定系列礼物列表请求
+    CollectHallSeriesPrizeReq collectHallSeriesPrizeReq = 4; // 限定系列奖励列表请求
+    SudGetCodeReq sudGetCodeReq = 5;// sud获取客户端code请求
+    SudGetSstokenReq sudGetSstokenReq = 6; // sud短期令牌Code更换长期令牌SSToken请求
+    SudUpdateSstokenReq sudUpdateSstokenReq = 7; // sud刷新长期令牌请求
+    SudGetUserInfoReq sudGetUserInfoReq = 8; // sud获取用户信息请求
+    SudCreateOrderReq sudCreateOrderReq = 9; // sud创建订单请求
+  }
+}
+
+// 玩法相关响应
+message PlayResponse {
+  oneof body {
+    CollectHallInfoRes collectHallInfoRes = 1; // 礼物藏馆信息响应
+    CollectHallSeriesRes collectHallSeriesRes = 2; // 用户主页系列列表响应
+    CollectHallSeriesGiftsRes CollectHallSeriesGiftsRes = 3; // 限定系列礼物列表响应
+    CollectHallSeriesPrizeRes collectHallSeriesPrizeRes = 4; // 限定系列奖励列表响应
+    SudGetCodeRes sudGetCodeRes = 5;// sud获取客户端code响应
+    SudGetSstokenRes sudGetSstokenRes = 6; // sud短期令牌Code更换长期令牌SSToken响应
+    SudUpdateSstokenRes sudUpdateSstokenRes = 7; // sud刷新长期令牌响应
+    SudGetUserInfoRes sudGetUserInfoRes = 8; // sud获取用户信息响应
+    SudCreateOrderRes sudCreateOrderRes = 9; // sud创建订单响应
+  }
+}
+
+// 礼物藏馆信息请求
+message CollectHallInfoReq{
+}
+// 礼物藏馆信息响应
+message CollectHallInfoRes{
+  CollectionHallVo userInfo = 1; // 用户藏馆信息
+  repeated CollectionHallVo greyGifts = 2; // 未点亮礼物列表
+  repeated CollectionHallVo brightGifts = 3; // 已点亮礼物列表
+}
+
+// 用户主页系列列表请求
+message CollectHallSeriesReq{
+}
+// 用户主页系列列表响应
+message CollectHallSeriesRes{
+  repeated CollectionHallVo userSeries = 1; // 用户主页限时系列列表
+}
+
+// 限定系列礼物列表请求
+message CollectHallSeriesGiftsReq{
+  int64 seriesId = 1;// 系列ID
+}
+// 限定系列礼物列表响应
+message CollectHallSeriesGiftsRes{
+  repeated CollectionHallVo gifts = 1; // 限时系列的所有礼物列表
+}
+
+// 限定系列奖励列表请求
+message CollectHallSeriesPrizeReq{
+  int64 seriesId = 1;// 系列ID
+}
+// 限定系列奖励列表响应
+message CollectHallSeriesPrizeRes{
+  int32 prizeIndex = 1;//奖励标识
+  int32 finish = 2;//是否完成获得奖励 0未完成1已完成
+  repeated CollectionHallVo prizes = 3; // 奖品列表
+}
+
+// sud获取客户端code
+message SudGetCodeReq{
+  string userId = 1;// 用户Id(如果值为空，提取token里面的userId)
+}
+
+// 限定系列奖励列表响应
+message SudGetCodeRes{
+  string code = 1;//客户端code(默认有效时长两小时)
+  int64 expire_date = 2;//过期时间戳（毫秒）
+}
+
+// 短期令牌Code更换长期令牌SSToken请求
+message SudGetSstokenReq{
+  string code = 1;// 客户端code
+}
+
+// 短期令牌Code更换长期令牌SSToken响应
+message SudGetSstokenRes{
+  string ss_token = 1;//长期令牌
+  int64 expire_date = 2;//过期时间戳（毫秒）
+  SudUserInfo user_info = 3;//用户信息
+}
+
+// 刷新长期令牌请求
+message SudUpdateSstokenReq{
+  string ssToken = 1;// 长期令牌
+}
+
+// 刷新长期令牌响应
+message SudUpdateSstokenRes{
+  string ss_token = 1;//长期令牌
+  int64 expire_date = 2;//过期时间戳（毫秒）
+}
+
+// 获取用户信息请求
+message SudGetUserInfoReq{
+  string ss_token = 1;// 长期令牌
+}
+
+// 获取用户信息响应
+message SudGetUserInfoRes{
+  SudUserInfo user_info = 3;//用户信息
+}
+
+//sud用户信息
+message SudUserInfo{
+  string uid = 1;// 接入方uid，机器人为空字符
+  string nick_name = 2;// 用户昵称
+  string avatar_url = 3;// 用户头像url(建议使用128*128尺寸)
+  string gender = 4;// 性别（female or male or "") 未知性别请填写空字符串
+  int32 is_ai = 5;// 0:普通用户，1:机器人（默认为0）
+  int32 ai_level = 6;//  ai等级 0：简单ai 1：简单ai 2：中级ai 3：高级ai 默认为0
+}
+
+// sud创建订单请求
+message SudCreateOrderReq{
+  string channelId = 1;// 房间Id
+  string cmd = 2;// 触发的行为动作，比如打赏，购买等(狼人杀抢角色：buy_role)
+  string fromUid = 3;// 付费用户uid
+  string toUid = 4;// 目标用户uid
+  int32 value= 5;// 所属的游戏价值钻石
+  string payload =6;//扩展数据 json 字符串, 特殊可选
+}
+
+// sud创建订单响应
+message SudCreateOrderRes{
+  string out_order_id = 1;//商户订单号id
+  string order_id = 2;//SUD订单号id
+}
+
+
+

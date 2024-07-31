@@ -1,0 +1,1049 @@
+syntax = "proto3";
+
+option swift_prefix = "OS";
+option java_multiple_files = true;
+package com.mm.proto;
+import "api_common.proto";
+
+// 用户相关请求
+message UserRequest {
+  oneof body {
+    LoginReq loginReq = 1; // 登录请求
+    ViewReq viewReq = 2; // 查看用户个人信息请求
+    EditUserReq editUserReq = 3; // 编辑用户信息请求
+    UserPhotoReq userPhotoReq = 4; // 查看用户照片墙请求
+    UploadPhotoReq uploadPhotoReq = 5; // 上传(单张)照片墙请求
+    UploadPhotoListReq uploadPhotoListReq = 6; // 上传(多张)照片墙请求
+    DeletePhotoReq deletePhotoReq = 7; // 删除(单张)照片墙请求
+    DeletePhotoListReq deletePhotoListReq = 8; // 删除(多张)照片墙请求
+    SigninInfoReq signinInfoReq = 9; // 获取签到信息请求
+    UserSigninReq userSigninReq = 10; // 用户签到请求
+    DressUpTagsReq dressUpTagsReq = 11; // 获取装扮标签请求
+    UserDressUpReq userDressUpReq = 12; // 获取用户装扮请求
+    DressUpOperateReq dressUpOperateReq = 13; // 装扮操作请求
+    UserGiftWallReq userGiftWallReq = 14; // 获取用户礼物墙请求
+    GiftDetailsReq giftDetailsReq = 15; // 查看用户收礼/送礼请求
+    LastJoinChannelReq lastJoinChannelReq = 16; // 用户最近访问房间请求
+    AccountSecurityReq accountSecurityReq = 17; // 获取账户安全等级信息请求
+    ThirdPartyAccountReq thirdPartyAccountReq = 18; // 获取第三方绑定的账号列表请求
+    BindMobileReq bindMobileReq = 19; // 绑定手机请求
+    AdolescentSettingReq adolescentSettingReq = 20; // 开启/关闭/校验青少年模式密码请求
+    AuthenticationReq authenticationReq = 21; // 用户实名认证请求
+    SettingPasswordReq settingPasswordReq = 22; // 设置密码请求
+    UpdatePasswordReq updatePasswordReq = 23; // 修改密码请求
+    ResetPasswordReq resetPasswordReq = 24; // 重置密码请求
+    AuthenticationVerifyMobileReq authenticationVerifyMobileReq = 25; // 实名认证验证绑定手机号码请求
+    BindVerifyMobileReq bindVerifyMobileReq = 26; // 绑定手机验证原手机号请求
+    FollowReq followReq = 27; // 关注用户请求
+    UnfollowReq unfollowReq = 28; // 取消关注请求
+    LogoutReq logoutReq = 29; // 退出登录请求
+    ReportReq reportReq = 30; // 举报用户/房间请求
+    JoinBlacklistReq joinBlacklistReq = 31; // 加入黑名单请求
+    RemoveBlacklistReq removeBlacklistReq = 32; // 移除黑名单请求
+    FollowingsListReq followingsListReq = 33; // 关注列表请求
+    FollowersListReq followersListReq = 34; // 粉丝列表请求
+    UserFeedbackReq userFeedbackReq = 35; // 用户反馈请求
+    SearchReq searchReq = 36; // 搜索请求
+    SignInAvatarReq signInAvatarReq = 37; // 获取注册头像请求
+    UserWalletReq userWalletReq = 38; // 用户钱包请求
+    IdCardRecognitionReq idCardRecognitionReq = 39; // 身份证识别请求
+    LogoffReq logoffReq = 40; // 用户注销请求
+    UserMedalListReq userMedalListReq = 41; // 用户勋章列表请求
+    DressUpMallReq dressUpMallReq = 42; // 装扮商城列表请求
+    BuyDressUpReq buyDressUpReq = 43; // 购买装扮请求
+    InviteReq inviteReq = 44; // 邀请码、补码请求
+    GiveDressUpReq giveDressUpReq = 45; // 赠送装扮请求
+    MyFriendsReq myFriendsReq = 46; // 好友列表请求
+    VisitRecordReq visitRecordReq = 47; // 访客记录
+    EidolonOperationReq eidolonOperationReq = 48;//幻灵操作
+    LoadBlacklistReq loadBlacklistReq = 49; // 黑名单列表
+    HonouredGuestCardsReq honouredGuestCardsReq = 50; // 贵宾卡列表请求
+    FansClubBadgesReq fansClubBadgesReq = 51; // 粉丝团徽章列表请求
+    WearAndRemoveBadgeReq wearAndRemoveBadgeReq = 52; // 粉丝团-佩戴或卸下徽章请求
+    FansClubRanksReq fansClubRanksReq = 53; // 粉丝团-粉丝榜请求
+    FansClubExitReq fansClubExitReq = 54; // 粉丝团-退出粉丝团请求
+    FaceVerifyReq FaceVerifyReq = 55;// 人脸认证请求
+    FaceVerifyResultReq faceVerifyResultReq = 56;// 人脸认证结果查询请求
+    UserVoiceDialogueReportReq userVoiceDialogueReportReq = 57;// 声音介绍 换一换请求
+    UserVoiceSoftDeleteReq userVoiceSoftDeleteReq = 58;// 删除声音介绍请求
+    UserVoiceSubmitReq userVoiceSubmitReq = 59;// 提交审核请求
+  }
+}
+
+// 用户相关响应
+message UserResponse {
+  oneof body {
+    LoginRes loginRes = 1; // 登录响应
+    ViewRes viewRes = 2; // 查看用户个人信息响应
+    EditUserRes editUserRes = 3; // 编辑用户信息响应
+    UserPhotoRes userPhotoReq = 4; // 查看用户照片墙响应
+    UploadPhotoRes uploadPhotoRes = 5; // 上传(单张)照片墙响应
+    UploadPhotoListRes uploadPhotoListRes = 6; // 上传(多张)照片墙响应
+    DeletePhotoRes deletePhotoRes = 7; // 删除(单张)照片墙响应
+    DeletePhotoListRes deletePhotoListRes = 8; // 删除(多张)照片墙响应
+    SigninInfoRes signinInfoRes = 9; // 获取签到信息响应
+    UserSigninRes userSigninRes = 10; // 用户签到响应
+    DressUpTagsRes dressUpTagsRes = 11; // 获取装扮标签响应
+    UserDressUpRes userDressUpRes = 12; // 获取用户装扮响应
+    DressUpOperateRes dressUpOperateRes = 13; // 装扮操作响应
+    UserGiftWallRes userGiftWallRes = 14; // 获取用户礼物墙响应
+    GiftDetailsRes giftDetailsRes = 15; // 查看用户收礼/送礼响应
+    LastJoinChannelRes lastJoinChannelRes = 16; // 用户最近访问房间响应
+    AccountSecurityRes accountSecurityRes = 17; // 获取账户安全等级信息响应
+    ThirdPartyAccountRes thirdPartyAccountRes = 18; // 获取第三方绑定的账号列表响应
+    BindMobileRes bindMobileRes = 19; // 绑定手机响应
+    AdolescentSettingRes adolescentSettingRes = 20; // 开启/关闭/校验青少年模式密码响应
+    AuthenticationRes authenticationRes = 21; // 用户实名认证响应
+    SettingPasswordRes settingPasswordRes = 22; // 设置密码响应
+    UpdatePasswordRes updatePasswordRes = 23; // 修改密码响应
+    ResetPasswordRes resetPasswordRes = 24; // 重置密码响应
+    AuthenticationVerifyMobileRes authenticationVerifyMobileRes = 25; // 实名认证验证绑定手机号码响应
+    BindVerifyMobileRes bindVerifyMobileRes = 26; // 绑定手机验证原手机号响应
+    FollowRes followRes = 27; // 关注用户响应
+    UnfollowRes unfollowRes = 28; // 请求关注响应
+    LogoutRes logoutRes = 29; // 退出登录响应
+    ReportRes reportRes = 30; // 举报用户/房间响应
+    JoinBlacklistRes joinBlacklistRes = 31; // 加入黑名单响应
+    RemoveBlacklistRes removeBlacklistRes = 32; // 移除黑名单响应
+    FollowingsListRes followingsListRes = 33; // 关注列表响应
+    FollowersListRes followersListRes = 34; // 粉丝列表响应
+    UserFeedbackRes userFeedbackRes = 35; // 用户反馈响应
+    SearchRes searchRes = 36; // 搜索响应
+    SignInAvatarRes signInAvatarRes = 37; // 获取注册头像响应
+    UserWalletRes userWalletRes = 38; // 用户钱包响应
+    IdCardRecognitionRes idCardRecognitionRes = 39; // 身份证识别响应
+    LogoffRes logoffRes = 40; // 用户注销响应
+    UserMedalListRes userMedalListRes = 41; // 用户勋章列表响应
+    DressUpMallRes dressUpMallRes = 42; // 装扮商城列表响应
+    BuyDressUpRes buyDressUpRes = 43; // 购买装扮响应
+    InviteRes inviteRes = 44; // 邀请码、补码响应
+    GiveDressUpRes giveDressUpRes = 45; // 赠送装扮响应
+    MyFriendsRes myFriendsRes = 46; // 好友列表请求
+    VisitRecordRes visitRecordRes = 47; // 访客记录
+    EidolonOperationRes eidolonOperationRes = 48;//幻灵操作
+    LoadBlacklistRes loadBlacklistRes = 49; // 黑名单列表
+    HonouredGuestCardsRes honouredGuestCardsRes = 50; // 贵宾卡列表响应
+    FansClubBadgesRes fansClubBadgesRes = 51; // 粉丝团徽章列表响应
+    WearAndRemoveBadgeRes wearAndRemoveBadgeRes = 52; // 粉丝团-佩戴或卸下徽章响应
+    FansClubRanksRes fansClubRanksRes = 53; // 粉丝团-粉丝榜响应
+    FansClubExitRes fansClubExitRes = 54; // 粉丝团-退出粉丝团响应
+    FaceVerifyRes FaceVerifyRes = 55;// 人脸认证响应
+    FaceVerifyResultRes faceVerifyResultRes = 56;// 人脸认证结果查询响应
+    UserVoiceDialogueReportRes userVoiceDialogueReportRes = 57;// 声音介绍 换一换响应
+    UserVoiceSoftDeleteRes userVoiceSoftDeleteRes = 58;// 删除声音介绍响应
+    UserVoiceSubmitRes userVoiceSubmitRes = 59;// 提交审核响应
+  }
+}
+
+// 登录请求
+message LoginReq {
+  string identifier = 1; // 根据登录类型不同，定义不同(自动登录:用户ID;手机登录:手机号;微信登录:authCode;QQ:unionId)
+  string credential = 2; // 根据登录类型不同，定义不同(自动登录:用户TOKEN;手机登录:手机验证码;微信登录:无;QQ:accessToken)
+  string identityType = 3; // 登录类型
+}
+
+// 登录响应
+message LoginRes {
+  string token = 1; // token
+  ChannelVo myChannel = 2; // 房间信息
+  UserVo user = 3; // 用户信息
+  UserSetting userSetting = 4; // 用户设置信息
+  SigninInfo signinInfo = 5; // 签到信息,yoni用
+  SigninInfo2 signinInfo2 = 6; // 签到信息,逗趣和元气用
+  repeated MedalList medalList = 7; // 勋章等级列表
+  BindMobile bindMobile = 8; // 绑定手机相关
+  InviteConfig inviteConfig = 9; // 邀请码配置信息
+  int32 isNew = 10; // 是否新注册用户
+  string privateChannelToken = 11; // 声网私聊频道token
+  int32 hasEdit = 12; // 是否已编辑过个人信息 0：未编辑,1：已编辑
+  int32 openAdolescentModel = 13; // 是否强制开启青少年模式 0:否 1:是
+  EidolonInfo eidolonInfo = 14;// 幻灵数据
+}
+
+
+// 签到信息,yoni用
+message SigninInfo {
+  string secondPrompt = 1; // 签到信息
+  string giftIcon = 2; // 礼物图标
+}
+// 签到信息,逗趣和元气用
+message SigninInfo2 {
+  repeated PrizeList prizeList = 1; // 签到列表
+  string message = 2; // 签到说明，如：明日签到更多好礼哦
+}
+// 签到列表
+message PrizeList {
+  string name = 1; // 名称
+  string iconUrl = 2; // 图片地址
+  int32 count = 3; // 数量
+  int32 prizeType = 4; // 奖励类型，1：免费礼物，2：普通礼物，3：坐骑，4：麦位框
+}
+//绑定手机相关
+message BindMobile {
+  int32 isBindMobile = 1; // 是否已绑定手机,0=未绑定,1=已绑定
+  int32 createChannelAuth = 2; // 创建房间限制,0=无权限,1=有权限
+  int32 publicChatAuth = 3; // 公屏发言限制,0=无权限,1=有权限
+  int32 momentAuth = 4; // 动态限制,0=无权限,1=有权限
+  int32 upSeatAuth = 5; // 上麦限制,0=无权限,1=有权限
+  int32 commentAuth = 6; // 评论限制,0=无权限,1=有权限
+  string displayMobile = 7; // 手机号(已做脱敏处理)
+}
+// 邀请码配置信息
+message InviteConfig {
+  int32 skipType = 1; // 跳转类型(0.不跳转 1.跳转房间)
+  string skipChannelId = 2; // 跳转房间Id
+  int32 lockRoom = 3; // 是否密码房(0.否 1.是)
+  int32 invitationStatus = 4; // 用户是否已填写邀请码(0:未填写 1:已填写)
+  int32 editCodeEntrance = 5; // 用户设置-填写邀请码入口（0隐藏1显示）
+}
+
+// 查看用户个人信息请求
+message ViewReq {
+  string targetId = 1; // 目标用户id
+}
+
+// 查看用户个人信息响应
+message ViewRes {
+  UserVo user = 1; // 用户信息
+  repeated MedalList medalList = 2; // 勋章列表信息
+  DressUpInfo dressUpInfo = 3; // 装扮信息
+  Family family = 4; // 家族信息
+  Other other = 5; // 其他消息
+  ChannelVo currentLocation = 6; // 当前所在房间信息
+  int32 following = 7; // 是否关注了对方
+  int32 blacklistStatus = 8; // 黑名单状态 0未拉黑 1已拉黑
+  int32 withdrawSwitch = 9; // 是否显示水晶（提现）入口,0：不显示，1：显示
+  int32 walletSwitch = 10; // 是否显示钱包入口,0：不显示 1：显示
+  string checkCode = 11; // 校验码
+  repeated HonouredGuestCard honouredGuestCards = 12; // 贵宾卡列表信息
+  repeated FansClubBadge fansClubs = 13; // 粉丝团徽章列表信息
+  FansClubVo fansBadge = 15; // 粉丝团徽章信息
+  CollectionHallVo collectHallInfo = 16; // 用户礼物藏馆信息
+}
+// 家族信息
+message Family {
+  string familyId = 1; // 家族系统ID
+  int32 familyAccountId = 2; // 家族ID(显示用)
+  string familyName = 3; // 家族名称
+  string familyAvatarUrl = 4; // 家族头像
+  int32 familyMessage = 5; // 家族消息数量
+  int32 type = 6; // 权限类型 1：族长，2：签约成员，3：普通成员
+  int32 familySignInvite = 7; // 家族签约邀请;0=不显示,1=正常显示,2=显示但没实名，3=主播使用版本过低，5=该用户的其他实名账号已签约
+  string powerType = 8; // 家族权限
+  int64 familySignRecordId = 9; // 签约记录id
+  int64 source = 10; // 来源;0=族长发起,1=主播申请
+}
+
+// 其他消息
+message Other {
+  int32 following = 1; // 用户关注数量
+  int32 followers = 2; // 粉丝数量
+  int32 friends = 3; // 用户好友数量
+  int32 invitation = 4; // 是否显示邀请入口
+  int32 momentCount = 5; // 用户动态数量
+  int32 footprint = 6; // 足迹数量
+  int32 isGenderModify = 7; // 是否可编辑性别 0否 1是
+  int32 visitCount = 8; // 访客数量
+
+  int32 hasCertification = 9; // 是否实名认证 -1.已实名（未上传身份证照片） 0.未实名 1.已实名
+  int32 faceVerification = 10; // 人脸认证
+  string displayName = 11; // 显示实名姓名（加星）
+  string displayNumber = 12; // 显示身份证号码（加星）
+
+  int32 myFansClubState = 13; // 我的粉丝团状态 0未满足条件/粉丝团未创建或失效 1已创建/正在申请粉丝团
+}
+
+//用户粉丝团徽章信息
+message FansClubBadge{
+  int64 clubId = 1; // 粉丝团Id
+  int32 level = 2; // 粉丝徽章等级
+  string badgeName = 3; // 徽章名称
+  string badgeIcon = 4; // 徽章图标
+}
+
+// 编辑用户信息请求
+message EditUserReq {
+  string nickname = 1; // 昵称
+  Gender gender = 2; // 性别,1男 2女
+  string avatarUrl = 3; // 头像地址
+  string birthday = 4; // 生日
+  string signature = 5; // 个性签名
+  string inviteCode = 6; // 邀请码
+}
+// 编辑用户信息响应
+message EditUserRes {
+  string userId = 1; // 用户系统id
+  string channelId = 2; // 用户自己的频道
+  int32 accountId = 3; // 账号id
+  string nickname = 4; // 昵称
+  string avatarUrl = 5; // 头像
+  Gender gender = 6; // 性别
+  string birthday = 7; // 生日
+  string signature = 8; // 个性签名
+  int32 followers = 9; // 粉丝
+  int32 following = 10; // 关注
+  int32 adminFlag = 11; // 超管标识
+  InviteConfig inviteConfig = 12; // 填写邀请码需要跳转的房间配置信息
+}
+
+// 查看用户照片墙请求
+message UserPhotoReq {
+  string userId = 1; // 用户id
+}
+// 查看用户照片墙响应
+message UserPhotoRes {
+  repeated UserPhotoVo userPhotoList = 1; // 用户照片墙列表
+}
+// 用户照片信息
+message UserPhotoVo {
+  int32 id = 1; // 照片id
+  string userId = 2; // 用户系统id
+  string url = 3; // 照片地址
+  int32 defaultPhoto = 4; // 是否是默认照片,0:否 1:是
+  int32 sort = 5; // 排序
+}
+
+// 上传(单张)照片墙请求
+message UploadPhotoReq {
+  string url = 1; // 图片地址
+}
+// 上传(单张)照片墙响应
+message UploadPhotoRes {
+  int32 id = 1; // id
+  string userId = 2; // 用户系统id
+  string url = 3; // 图片地址
+}
+
+// 上传(多张)照片墙请求
+message UploadPhotoListReq {
+  repeated string urlList = 1; // 图片地址列表
+}
+// 上传(多张)照片墙响应
+message UploadPhotoListRes {
+}
+
+// 删除(单张)照片墙请求
+message DeletePhotoReq {
+  int64 id = 1; // 照片id
+}
+// 删除(单张)照片墙响应
+message DeletePhotoRes {
+  int64 id = 1; // 下一个照片墙id
+  string userId = 2; // 用户系统id
+  string url = 3; // 图片地址
+  int32 defaultPhoto = 4; // 是否是默认照片墙 0:否 1:是
+  int32 sort = 5; // 排序
+}
+
+// 删除(多张)照片墙请求
+message DeletePhotoListReq {
+  repeated int64 idList = 1; // 照片墙id列表
+}
+// 删除(多张)照片墙响应
+message DeletePhotoListRes {
+}
+
+// 获取签到信息请求
+message SigninInfoReq {
+}
+// 获取签到信息响应
+message SigninInfoRes {
+  int32 seriesDay = 1; // 连续签到天数
+  int32 signinStatus = 2; // 今天签到状态 0未签到 1已签到
+  int64 monthTimestamp = 3; // 签到月份时间戳/毫秒
+  repeated SigninList signinList = 4; // 我的签到列表
+  repeated SeriesGiftList seriesGiftList = 5; // 连续签到礼物列表
+}
+// 我的签到列表
+message SigninList {
+  int64 dateTimestamp = 1; // 日期时间戳
+  int64 signinTimestamp = 2; // 签到时间戳(签到才返回)
+  string showIcon = 3; // 签到展示礼物图标(签到才返回)
+  int32 signinStatus = 4; // 签到状态(0未签到 1已签到)
+}
+// 连续签到礼物列表
+message SeriesGiftList {
+  string giftName = 1; // 礼物名称
+  string giftIcon = 2; // 礼物图标
+  int32 signinScope = 3; // 礼物获得天数范围 (0表示整月)
+  string remark = 4; // 礼物描述
+  string acquire = 5; // 获得条件
+}
+
+// 用户签到请求
+message UserSigninReq {
+}
+// 用户签到响应
+message UserSigninRes {
+  string prompt = 1; // 签到提示
+  string secondPrompt = 2; // 二级提示
+  repeated SigninGifts signinGifts = 3; // 签到礼物列表
+}
+// 签到礼物列表
+message SigninGifts {
+  string giftName = 1; // 礼物名称
+  string giftIcon = 2; // 礼物图片
+  int32 count = 3; // 礼物数量
+  string remark = 4; // 礼物描述
+}
+
+// 获取装扮标签请求
+message DressUpTagsReq {
+  int32 dressUpSource = 1; // 标签入口 1商城 2我的
+}
+// 获取装扮标签响应
+message DressUpTagsRes {
+  repeated DressUpTagVo dressUpTagList = 1; // 装扮标签列表
+}
+// 装扮标签信息
+message DressUpTagVo {
+  DressUpTagType searchType = 1; // 搜索类型
+  string name = 2; // 名称
+}
+
+// 获取用户装扮请求
+message UserDressUpReq {
+  int32 current = 1; // 页数
+  int32 size = 2; // 每页数量大小
+  DressUpTagType searchType = 3; // 搜索类型
+}
+// 获取用户装扮响应
+message UserDressUpRes {
+  int32 total = 1; // 总数
+  int32 size = 2; // 每页数量
+  int32 current = 3; // 当前页
+  repeated DressUpVo records = 4; // 装扮信息
+}
+// 装扮信息
+message DressUpVo {
+  int32 dressId = 1; // 装扮id
+  int32 userDressUpId = 2; // 用户装扮id
+  string dressUpName = 3; // 装扮名称
+  string dressUpIcon = 4; // 装扮静态图
+  string dressIconSvga = 5; // 装扮动态svga,动态图,如果为空字符串则使用dressIcon展示
+  DressUpStatus dressUpStatus = 6; // 装扮佩戴状态 0未佩戴 1佩戴
+  int32 duration = 7; // 剩余时间,0为永久
+  int32 dressUpType = 8; // 装扮类型
+  DressUpTagType searchType = 9; // 搜索类型
+  string dressUpRemark = 10; // 备注
+  int64 effectiveTime = 11;// 生效时间时间戳
+  int64 expireTime = 12;// 过期时间时间戳
+}
+
+// 装扮操作请求
+message DressUpOperateReq {
+  DressUpStatus operateType = 1; // 类型 0取消佩戴 1佩戴
+  int32 userDressUpId = 2; // 用户装扮id
+}
+// 装扮操作响应
+message DressUpOperateRes {
+}
+
+// 获取用户礼物墙请求
+message UserGiftWallReq {
+  string targetId = 1; // 目标用户id
+  string channelId = 2; // 目标房间id
+}
+// 获取用户礼物墙响应
+message UserGiftWallRes {
+  int32 total = 1; // 总数
+  int32 size = 2; // 每页数量
+  int32 current = 3; // 当前页
+  repeated GiftWallVo records = 4; // 礼物墙信息
+}
+// 礼物墙信息
+message GiftWallVo {
+  int32 giftId = 1; // 礼物id
+  string giftName = 2; // 礼物名称
+  int32 giftCount = 3; // 礼物数量
+  string giftIconUrl = 4; // 礼物icon
+  int32 totalGiftValue = 5; // 礼物总价值
+  int32 timedCornerMark = 6; // 是否显示限时角标 0.不显示 1.显示
+}
+
+// 查看用户收礼/送礼请求
+message GiftDetailsReq {
+  int32 current = 1; // 页数
+  int32 size = 2; // 每页数量大小
+  int32 type = 3; // 类型 0:收礼,1:送礼
+}
+// 查看用户收礼/送礼响应
+message GiftDetailsRes {
+  GiftDetails giftDetails = 1; // 礼物详情
+}
+// 礼物详情
+message GiftDetails {
+  int32 total = 1; // 总数
+  int32 size = 2; // 每页数量
+  int32 current = 3; // 当前页
+  repeated UserGiftVo records = 4; // 送礼/收礼信息
+}
+// 送礼/收礼信息
+message UserGiftVo {
+  int32 accountId = 1; // 账号id
+  string nickname = 2; // 用户昵称
+  string avatarUrl = 3; // 用户头像
+  string giftName = 4; // 礼物名称
+  string giftIconUrl = 5; // 礼物图标
+  int32 giftCount = 6; // 礼物数量
+  int32 totalGiftValue = 7; // 礼物价值
+  string createTime = 8; // 日期
+}
+
+// 用户最近访问房间请求
+message LastJoinChannelReq {
+}
+// 用户最近访问房间响应
+message LastJoinChannelRes {
+  int32 total = 1; // 总数
+  int32 size = 2; // 每页数量
+  int32 current = 3; // 当前页
+  repeated ChannelVo records = 4; // 房间信息
+}
+
+// 获取账户安全等级信息请求
+message AccountSecurityReq {
+}
+// 获取账户安全等级信息响应
+message AccountSecurityRes {
+  string mobile = 1; // 绑定手机（有绑定时返回）
+  string bindMobileMsg = 2; // 绑定手机提示
+  string authenticationMsg = 3; // 实名认证提示,如已认证、未认证
+  int32 exitPassword = 4; // 0:未设置过密码,1:已设置过密码
+  int32 securityLevel = 5; // 安全等级,1：低,2:中,3:高
+  string securityMsg = 6; // 安全等级提示
+}
+
+// 获取第三方绑定的账号列表请求
+message ThirdPartyAccountReq {
+}
+// 获取第三方绑定的账号列表响应
+message ThirdPartyAccountRes {
+  int32 qqBindState = 1; // QQ绑定状态
+  int32 wechatBindState = 2; // 微信绑定状态
+  int32 appleBindState = 3; // 苹果绑定状态,安卓设备不返回该字段,苹果设备返回该字段
+}
+
+// 绑定手机请求
+message BindMobileReq {
+  string mobile = 1; // 手机号码
+  string verifyCode = 2; // 验证码
+}
+// 绑定手机响应
+message BindMobileRes {
+  string mobile = 1; // 新手机号码
+  string displayMobile = 2; // 展示手机号码
+}
+
+// 开启/关闭/校验青少年模式密码请求
+message AdolescentSettingReq {
+  int32 adolescentModel = 1; // 类型 1开启青少年密码 0关闭青少年密码 2校验青少年密码
+  int32 adolescentPwd = 2; // 密码，四位数
+}
+// 开启/关闭/校验青少年模式密码响应
+message AdolescentSettingRes {
+}
+
+// 用户实名认证请求
+message AuthenticationReq {
+  string idCardNo = 1; // 身份证号码
+  string realName = 2; // 真实姓名
+}
+// 用户实名认证响应
+message AuthenticationRes {
+  UserSetting userSetting = 1; // 用户设置信息
+}
+
+// 设置密码请求
+message SettingPasswordReq {
+  string password = 1; // md5加密后的密码
+}
+// 设置密码响应
+message SettingPasswordRes {
+}
+
+// 修改密码请求
+message UpdatePasswordReq {
+  string oldPassword = 1; // md5加密后的旧密码
+  string password = 2; // md5加密后的新密码
+}
+// 修改密码响应
+message UpdatePasswordRes {
+}
+
+// 重置密码请求
+message ResetPasswordReq {
+  int32 accountId = 1; // 账号id
+  string password = 2; // md5加密后的密码
+  string mobilePhone = 3; // 手机号码
+  string verifyCode = 4; // 验证码
+}
+// 重置密码响应
+message ResetPasswordRes {
+}
+
+// 实名认证验证绑定手机号码请求
+message AuthenticationVerifyMobileReq {
+  string mobile = 1; // 手机号码
+  string verifyCode = 2; // 验证码
+}
+// 实名认证验证绑定手机号码响应
+message AuthenticationVerifyMobileRes {
+}
+
+// 绑定手机验证原手机号请求
+message BindVerifyMobileReq {
+  string verifyCode = 1; // 验证码
+}
+// 绑定手机验证原手机号响应
+message BindVerifyMobileRes {
+}
+
+// 关注用户请求
+message FollowReq {
+  string targetId = 1; // 关注人的用户系统id
+}
+// 关注用户响应
+message FollowRes {
+  FollowStatus followStatus = 1; // 关注状态,0:未关注,1:已关注,2:互相关注
+}
+
+// 请求关注请求
+message UnfollowReq {
+  string targetId = 1; // 目标用户系统id
+}
+// 请求关注响应
+message UnfollowRes {
+}
+
+// 退出登录请求
+message LogoutReq {
+}
+// 退出登录响应
+message LogoutRes {
+}
+
+// 举报用户/房间/动态请求
+message ReportReq {
+  string targetId = 1; // 举报目标id(房主id或用户id)
+  string reason = 2; // 举报原因
+  int32 type = 3; // 举报类型(0:用户 1:房间 2:动态 3：动态评论)
+  repeated string pictureUrls = 4; // 图片列表
+  int64 momentId = 5;//动态Id
+  int64 commentId = 6;//动态评论Id
+}
+// 举报用户/房间响应
+message ReportRes {
+}
+
+// 加入黑名单请求
+message JoinBlacklistReq {
+  string targetId = 1; // 举报目标id
+}
+// 加入黑名单响应
+message JoinBlacklistRes {
+}
+
+// 加载黑名单列表请求
+message LoadBlacklistReq {
+  PageReq page = 1;//分页
+}
+
+// 加载黑名单列表响应
+message LoadBlacklistRes {
+  int32 total = 1; // 总数
+  int32 size = 2; // 每页数量
+  int32 current = 3; // 当前页
+  repeated BlacklistVo records = 4; // 黑名单用户信息
+}
+
+// 移除黑名单请求
+message RemoveBlacklistReq {
+  string targetId = 1; // 举报目标id
+}
+// 移除黑名单响应
+message RemoveBlacklistRes {
+}
+
+// 关注列表请求
+message FollowingsListReq {
+  int32 current = 1; // 页数
+  int32 size = 2; // 每页数量大小
+}
+// 关注列表响应
+message FollowingsListRes {
+  int32 total = 1; // 总数
+  int32 size = 2; // 每页数量
+  int32 current = 3; // 当前页
+  repeated UserFollowVo records = 4; // 关注用户数据
+}
+
+// 幻灵操作请求
+message EidolonOperationReq {
+  string operateType = 1;//操作类型,CARRY=携带
+  int64 id = 2;//用户幻灵id
+  bool carry = 3;//携带
+}
+
+// 幻灵操作响应
+message EidolonOperationRes {
+}
+
+// 访客记录请求
+message VisitRecordReq {
+}
+
+// 访客记录响应
+message VisitRecordRes {
+  repeated UserVo records = 1; // 访客者数据
+}
+
+// 好友列表请求
+message MyFriendsReq {
+  int32 current = 1; // 页数
+  int32 size = 2; // 每页数量大小
+  string searchStr = 3;//查询条件
+}
+// 好友列表响应
+message MyFriendsRes {
+  int32 total = 1; // 总数
+  int32 size = 2; // 每页数量
+  int32 current = 3; // 当前页
+  repeated UserFollowVo records = 4; // 关注用户数据
+}
+
+// 关注用户信息
+message UserFollowVo {
+  int32 id = 1; // id
+  string followingUserId = 2; // 关注用户系统id
+  int32 accountId = 3; // 账号id
+  string avatarUrl = 4; // 头像
+  string nickname = 5; // 昵称
+  Gender gender = 6; // 性别
+  string alias = 7; // 备注
+  string description = 8; // 描述
+  int32 bothStatus = 9; // 关系 1单向关注 2双向关注
+}
+
+// 粉丝列表请求
+message FollowersListReq {
+  int32 current = 1; // 页数
+  int32 size = 2; // 每页数量大小
+}
+// 粉丝列表响应
+message FollowersListRes {
+  int32 total = 1; // 总数
+  int32 size = 2; // 每页数量
+  int32 current = 3; // 当前页
+  repeated UserFollowersVo records = 4; // 粉丝用户数据
+}
+// 粉丝用户信息
+message UserFollowersVo {
+  int32 id = 1; // id
+  string followedUserId = 2; // 关注用户系统id
+  int32 accountId = 3; // 账号id
+  string avatarUrl = 4; // 头像
+  string nickname = 5; // 昵称
+  Gender gender = 6; // 性别
+  int32 bothStatus = 7; // 关系 1单向关注 2双向关注
+}
+
+// 用户反馈请求
+message UserFeedbackReq {
+  string description = 1; // 描述内容
+}
+// 用户反馈响应
+message UserFeedbackRes {
+}
+
+// 搜索请求
+message SearchReq {
+  string searchStr = 1; // 搜索关键字
+}
+// 搜索响应
+message SearchRes {
+  repeated UserVo user = 1; // 用户列表
+  repeated SearchChannelVo chatchannel = 2; // 房间列表
+}
+// 搜索房间信息
+message SearchChannelVo {
+  int32 channelNo = 1; // 房间号,展示用
+  string channelId = 2; // 房间id
+  string channelName = 3; // 房间名称
+  string avatarUrl = 4; // 头像
+  string channelType = 5; // 类型
+  string ownerId = 6; // 房主id
+  int32 onlineNumber = 7; // 在线人数
+  int32 lockedStatus = 8; // 是否上锁 0:未上锁 1:已上锁
+  string labelName = 9; // 标签名
+  repeated UserInSeats userInSeats = 10; // 麦位用户信息
+  string labelBackgroundImg = 11; // 房间角标
+}
+
+// 获取注册头像请求
+message SignInAvatarReq {
+}
+// 获取注册头像响应
+message SignInAvatarRes {
+  repeated UserAvatarVo avatarList = 1; // 注册头像信息列表
+}
+// 注册头像信息
+message UserAvatarVo {
+  string avatarName = 1; // 头像名称
+  string avatarUrl = 2; // 头像地址
+}
+
+// 用户钱包请求
+message UserWalletReq {
+}
+// 用户钱包响应
+message UserWalletRes {
+  int32 diamondsAmount = 1; // 钻石数量
+  int32 crystalAmount = 2; // 水晶数量
+}
+
+// 身份证识别请求
+message IdCardRecognitionReq {
+  string idCardFaceUrl = 1; // 身份证正面
+  string idCardBackUrl = 2; // 身份证反面
+}
+// 身份证识别响应
+message IdCardRecognitionRes {
+  string userId = 1; // 用户系统id
+  int32 hasCertification = 2; // 实名状态 0未实名 1已实名
+  string displayName = 3; // 展示名称(已做星号处理)
+  string displayNumber = 4; // 展示身份证号(已做星号处理)
+}
+
+// 用户注销请求
+message LogoffReq {
+}
+// 用户注销响应
+message LogoffRes {
+}
+
+// 用户勋章列表请求
+message UserMedalListReq {
+}
+// 用户勋章列表响应
+message UserMedalListRes {
+  repeated MedalList medalList = 1; // 勋章信息
+}
+
+// 装扮商城列表请求
+message DressUpMallReq {
+  int32 current = 1; // 页数
+  int32 size = 2; // 每页数量大小
+  DressUpTagType searchType = 3; // 搜索类型
+}
+// 装扮商城列表响应
+message DressUpMallRes {
+  int32 total = 1; // 总数
+  int32 size = 2; // 每页数量
+  int32 current = 3; // 当前页
+  repeated DressUpMallVo records = 4; // 装扮商城信息
+}
+// 装扮商城信息
+message DressUpMallVo {
+  int32 dressId = 1; // 装扮id
+  string dressUpName = 2; // 装扮名称
+  string dressUpIcon = 3; // 装扮图标
+  int32 dressUpPrice = 4; // 装扮价格
+  string dressUpRemark = 5; // 备注
+  int32 duration = 6; // 天数
+  int32 limitedType = 7; // 限定类型(限定类型 0:普通装扮;1:勋章限定;2:活动)
+  string dressIconSvga = 8; // 装扮动效
+}
+
+// 购买装扮请求
+message BuyDressUpReq {
+  int32 dressId = 1; // 装扮id
+}
+// 购买装扮响应
+message BuyDressUpRes {
+}
+
+// 赠送装扮请求
+message GiveDressUpReq {
+  int32 dressId = 1; // 装扮id
+  int32 targetAccountId = 2; //赠送装扮目标用户的accountId
+}
+// 赠送装扮响应
+message GiveDressUpRes {
+  string targetId = 1;//目标用户id
+  string dressUpName = 2;//装扮名称
+}
+
+// 邀请码请求
+message InviteReq {
+  string inviteCode = 1; // 邀请码
+  string channelIdCode = 2; // 渠道Id(不是房间Id)
+}
+
+// 邀请码响应
+message InviteRes {
+}
+
+// 黑名单用户信息
+message BlacklistVo {
+  int32 id = 1; // id
+  string blackListedUserId = 2; // 黑名单用户系统id
+  string avatarUrl = 4; // 头像
+  string nickname = 5; // 昵称
+}
+
+// 贵宾卡列表请求
+message HonouredGuestCardsReq {
+  string targetId =1; //查看目标用户Id(不传默认查看自己的)
+}
+// 贵宾卡列表响应
+message HonouredGuestCardsRes {
+  repeated HonouredGuestCard honouredGuestCards = 1; // 贵宾卡列表信息
+}
+
+// 粉丝团徽章列表请求
+message FansClubBadgesReq {
+  string targetId =1; //查看目标用户Id(不传默认查看自己的)
+}
+// 粉丝团徽章列表响应
+message FansClubBadgesRes {
+  repeated FansClubBadges fansClubBadges = 1;
+}
+
+//粉丝团徽章列表
+message FansClubBadges {
+    string userId = 1; // 用户系统id
+    int32 accountId = 2; // 账号id
+    string nickname = 3; // 昵称
+    string avatarUrl = 4; // 头像
+    int64 clubId = 5; // 粉丝团Id
+    string channelId = 6; // 房间Id
+    string badgeName = 7; // 粉丝团勋章名称
+    string badgeIcon = 8; // 粉丝团勋章等级icon
+    string badgeLevel = 9; // 粉丝团勋章等级
+    int32 wearStatus = 10; // 穿戴状态 0卸下1佩戴
+    int32 level = 11; //粉丝团等级
+    int32 nextLevel = 12; //下一等级
+    int64 nextLevelValue = 13; //下一等级阀值
+    int64 currentValue = 14; //当前等级亲密值
+    IntimacyVo todayIntimacyInfo = 15; // 今日亲密度信息
+    int64 maxLevelValue = 16; //最大等级亲密值
+}
+
+// 粉丝团-徽章操作类型
+enum FansOperateType {
+  WEARING = 0; // 佩戴徽章
+  REMOVING = 1; // 卸下徽章
+}
+// 佩戴/卸下粉丝徽章请求
+message WearAndRemoveBadgeReq {
+  int64 clubId = 1; //粉丝团Id
+  FansOperateType operateType = 2; //操作类型
+}
+
+// 佩戴/卸下粉丝徽章响应
+message WearAndRemoveBadgeRes {
+}
+
+// 粉丝团-排行榜类型
+enum FansRanksType {
+  FANS_RANGE_0 = 0; // 全部
+  FANS_RANGE_1 = 1; // 日榜
+  FANS_RANGE_2 = 2; // 周榜
+  FANS_RANGE_3 = 3; // 月榜
+}
+
+// 粉丝榜请求
+message FansClubRanksReq {
+  int64 clubId = 1; //粉丝团Id
+  FansRanksType searchType = 2; //操作类型
+}
+
+// 粉丝榜响应
+message FansClubRanksRes {
+  repeated FansClubRankVo ranks = 1;// 获取粉丝榜列表
+  FansClubRankVo myRank = 2;// 自己的排名、与上一名的差距
+}
+
+// 粉丝团信息
+message FansClubRankVo {
+  string userId = 1; // 用户系统id
+  int32 accountId = 2; // 账号id
+  string nickname = 3; // 昵称
+  string avatarUrl = 4; // 头像
+  int64 totalValue = 5; //当前等级亲密值
+  int32 rank = 6; //排名 0未上榜
+  int32 level = 7; //粉丝团等级
+  string badgeName = 8; // 粉丝团勋章名称
+  string badgeIcon = 9; // 粉丝团勋章等级icon
+  int32 gapValue = 10; //和上一名相差亲密值
+  Gender gender = 11; // 性别,1男 2女
+}
+
+// 退出粉丝团请求
+message FansClubExitReq {
+  int64 clubId = 1; //粉丝团Id
+}
+// 退出粉丝团响应
+message FansClubExitRes {
+}
+
+// 人脸认证请求
+message FaceVerifyReq{
+  string realName = 1; //真实姓名
+  string idCardNo = 2; //身份证号
+  string returnUrl = 3; //前端回调页面跳转地址
+  string bizCode = 4; //人脸认证场景码
+  int32 authType = 5; //类型 0充值人脸认证 1APP人脸认证（默认0）
+  string verifyCode = 6;//验证码(authType=0必传)
+  string mobile = 7;//手机号(authType=0必传)
+}
+// 人脸认证响应
+message FaceVerifyRes{
+  string realName = 1; //真实姓名
+  string idCardNo = 2; //身份证号
+  string certifyId = 3; //人脸认证记录ID
+}
+
+// 人脸认证结果查询请求
+message FaceVerifyResultReq{
+  string certifyId = 1; //人脸认证记录ID
+}
+// 人脸认证结果查询响应
+message FaceVerifyResultRes{
+  UserSetting userSetting = 1; // 用户认证信息
+}
+
+// 声音介绍 换一换请求
+message UserVoiceDialogueReportReq{
+}
+
+// 声音介绍 换一换响应
+message UserVoiceDialogueReportRes{
+  repeated UserVoiceDialogueReportVo userVoices = 1;
+}
+
+// 声音介绍审核记录
+message UserVoiceDialogueReportVo {
+  int64 id = 1; // 审核记录id
+  string word = 2; // 台词文案
+}
+
+// 删除声音介绍请求请求
+message UserVoiceSoftDeleteReq{
+}
+
+// 删除声音介绍请求响应
+message UserVoiceSoftDeleteRes{
+}
+
+// 提交审核请求
+message UserVoiceSubmitReq{
+  string voice = 1; // 声音url
+  int32 duration = 2; // 声音时长(毫秒)
+}
+
+// 提交审核响应
+message UserVoiceSubmitRes{
+}
+

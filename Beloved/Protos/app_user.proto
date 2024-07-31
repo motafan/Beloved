@@ -1,0 +1,182 @@
+syntax = "proto3";
+
+option java_package = "com.xbyy.game.proto";
+option swift_prefix = "ST";
+import "common.proto";
+
+// 房间抽奖消息
+message LotteryNotification {
+  int32 bubbleType = 1; // 冒泡泡抽奖类型
+}
+
+// 全服横幅通知
+message AppBannerNotification {
+  int32 source = 1;     // 来源 1.冒泡泡抽奖变身 2.冒泡泡送稀有礼物
+  string channelId = 2; // 频道id
+  string userId = 3; // 用户系统id
+  int32 accountId = 4; // 用户id
+  string nickName = 5; // 用户昵称
+  string avatarUrl = 6; // 用户头像
+  string bannerContent = 7; // 横幅文案
+  string bannerStyle = 8; // 横幅样式
+  int64 createTime = 9; // 创建时间
+  string iconUrl = 10; // 礼物图标
+  int32 lockedStatus = 11; // 房间是否上锁
+  string giftName = 12; // 礼物名称
+  int32 count = 13; // 数量
+  string channelName = 14; // 房间名称
+  string targetUserId = 15; // 目标用户系统id
+  int32 targetAccountId = 16; // 目标用户id
+  string targetNickName = 17; // 目标用户昵称
+  string targetAvatarUrl = 18; // 目标用户头像
+}
+
+
+message UserRequest {
+  oneof body {
+    LoadUserDetailReq load_user_detail = 20; // 加载用户详情
+
+  }
+}
+
+message UserResponse {
+  oneof body {
+    LoadUserDetailRes load_user_detail = 20; // 加载用户详情
+  }
+}
+
+message LoadUserDetailReq {
+  string target_id = 1;
+}
+
+
+message LoadUserDetailRes {
+  UserInDetail detail = 1;
+}
+
+message UserInDetail {
+  UserInCommon user = 1;
+}
+
+//APP消息通知枚举
+enum SysMsgNotifyType {
+  SystemNotify = 0; // 系统消息通知
+  InteractiveNotify = 1; // 动态互动消息通知
+  PrivateChatNotify = 2; // 私聊消息通知
+  FamilyNotify = 3; // 家族消息通知
+  FansClubLeveNotify = 4; // 粉丝团徽章等级更新通知
+  FansClubJoinNotify = 5; // 加入粉丝团通知
+  BosomFriendPendingNotify = 6; // 用户进房存在待处理申请通知
+  HonouredGuestCardLevelNotify = 7; // 贵宾卡等级更新通知
+  BosomFriendFloatScreenNotify = 8; // 挚友房间飘屏通知
+  VipOpeningNotify = 9; // 向平台用户推送VIP开通通知
+}
+
+// 消息通知
+message SysMsgNotification {
+  SysMsgNotifyType sysMsgType = 1;
+  int32 count = 2; //消息数量
+  int32 unread = 3; //是否有未读消息 0否1是
+  string nickname = 4;//昵称
+  string avatarUrl = 5;//头像
+  int32 level = 6;//等级
+  string badgeIcon = 7;// 徽章、物品icon
+  string badgeName = 8;// 徽章、物品名称
+  int64 applyId = 9; // 申请ID
+  int32 type = 10; // 类型 1发起申请 2接收申请 10上麦 11进房（sysMsgType==9 type: 1开通 2续费）
+  int64 startTimestamp = 11; // 开始时间戳
+  int64 endTimestamp = 12; // 结束时间戳
+  int64 sysTimestamp = 13; // 系统时间戳
+  string effectsUrl = 14;// 动效地址
+  string channelId = 15;// 房间Id
+  string targetId = 16;//目标用户Id
+  int32 operateType = 17;//操作类型 1房间内申请挚友 2用户主页申请挚友
+  string labelName = 18;//关系标签名称
+  string backdropUrl = 19;//背景样式
+  string promptUrl = 20;//提示样式-小
+  string fontColor = 21;//字体颜色
+  string honouredGestUrl = 22;//贵宾卡图标
+  string userId = 23;//用户Id
+  string targetNickname = 24;//目标用户昵称
+  string levelName= 25;
+  string promptUrl1 = 26;//提示样式-中
+  string promptUrl2 = 27;//提示样式-大
+  int64 timestamp = 28; // 时间戳
+  string msgContent = 29; // 消息内容
+}
+
+// 挚友消息通知
+message BosomFriendDto {
+  int64 applyId = 1;//申请Id
+  string userId = 2;//发起申请用户Id
+  int32 accountId = 3;//发起申请用户小白号
+  string nickname = 4;//发起申请用户昵称
+  string avatarUrl = 5;//发起申请用户头像
+  string targetId = 6;//目标用户Id
+  int32 targetAccountId = 7;//目标用户小白号
+  string targetNickname = 8;//目标用户昵称
+  string targetAvatarUrl = 9;//目标用户头像
+
+  int64 effectiveTimeTamp = 10;//申请生效时间戳
+  int64 expireTimeTamp = 11;//申请失效时间戳
+  int64 sysTimeTamp = 12;//当前系统时间戳
+  string remark = 13;//申请备注
+  int32 effectiveMinute = 14;//申请实际有效时间（秒）
+  int32 operateType = 15;//操作类型 1房间内申请挚友 2用户主页申请挚友 10申请解除挚友
+  string labelId = 16;//关系标签Id
+  string labelName = 17;//关系标签名称
+
+  int32 count = 18;//数量
+  //来源 1收到新的挚友申请 2挚友申请处理-通过 3挚友申请处理-拒绝 4挚友申请处理-超时拒绝 10挚友申请公屏通知 11挚友解绑私聊通知
+  int32 source = 19;
+  string channelId = 20;//房间Id
+  int64 auditTime = 21;//审核处理时间
+  int32 giftValue = 22;
+  string giftName = 23;
+  string giftIconUrl = 24;
+
+  int32 type = 25;//类型
+
+  string applyStyleUrl = 100;// 挚友申请书样式
+  string brightUrl = 101;// 亮图标
+  string greyUrl = 102;// 灰图标
+  string giftBackdropUrl = 103;// 礼物框
+  string agreeBtnUrl = 104;// 同意按钮图标
+  string refuseBtnUrl = 105;// 拒绝按钮图标
+  string agreePopupUrl = 106;// 同意弹窗图
+  string refusePopupUrl = 107;// 拒绝弹窗图
+
+}
+
+//消息通知列表
+message SysMsgNotifications {
+  repeated SysMsgNotification notifications = 1;
+}
+
+// vip消息通知
+message VipNotification{
+  int64 vipId= 1;
+  string userId= 2;
+  int32 levelId= 3;
+  string levelName= 4;
+  int32 level= 5;
+  string levelIcon= 6;
+  string levelEffect= 7;
+  int64 effectiveTimestamp= 8;
+  int64 expireTimestamp= 9;
+  int64 guardTimestamp= 10;
+  int32 type= 11; //类型 1：vip开通成功通知
+  string fontColor = 12;
+  string nameColor = 13;
+  int32 metaverse = 14; // 是否有元宇宙特权
+  int32 cloaking = 15; // 是否有隐身进房特权
+  int32 inhibitNoise = 16;// 是否有禁止干扰特权（防踢防拉黑防禁言）
+}
+
+// 幻灵消息通知
+message EidolonNotification{
+  EidolonMessageType messageType = 1; // 消息类型
+  string userId = 2; // 操作者ID
+  string linkValue = 3;//跳转内容
+  string imgUrl = 4;//图片
+}

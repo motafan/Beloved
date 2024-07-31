@@ -1,0 +1,1428 @@
+syntax = "proto3";
+
+option swift_prefix = "OS";
+option java_multiple_files = true;
+package com.mm.proto;
+import "api_common.proto";
+import "api_message.proto";
+ 
+// 房间相关请求
+message ChannelRequest {
+    oneof body {
+        CreateReq createReq = 1; // 创建房间请求
+        JoinReq joinReq = 2; // 加入房间请求
+        BackReq backReq = 3; // 回到房间请求
+        ExitReq exitReq = 4; // 退出房间请求
+        RealTimeInfoReq realTimeInfoReq = 5; // 房间实时信息请求(房间每5秒轮询)
+        OnlineReportReq onlineReportReq = 6; // 心跳请求(房间每20秒轮询)
+        DetailReq detailReq = 7; // 房间详情请求
+        EditChannelReq editChannelReq = 8; // 编辑房间信息请求
+        TagsReq tagsReq = 9; // 礼物栏标签列表请求
+        GiftListReq giftListReq = 10; // 礼物/福袋/背包列表请求
+        ViewInfoReq viewInfoReq = 11; // 房间内查看用户信息请求
+        PickUpMicroPhoneReq pickUpMicroPhoneReq = 12; // 上麦请求
+        PickUpMicroPhoneCompelReq pickUpMicroPhoneCompelReq = 13; // 强制上麦请求
+        PutDownMicroPhoneReq putDownMicroPhoneReq = 14; // 下麦请求
+        ExchangeMicroPhoneReq exchangeMicroPhoneReq = 15; // 换麦请求
+        WordsNotAllowedReq wordsNotAllowedReq = 16; // 禁言(不能发公屏)请求
+        WordsAllowedReq wordsAllowedReq = 17; // 解除禁言(允许发公屏)请求
+        // 麦位锁状态相关
+        LockMicroPhoneReq lockMicroPhoneReq = 18; // 麦位状态相关0------锁定麦位请求
+        UnLockMicrophoneReq unLockMicrophoneReq = 19; // 麦位状态相关1------解锁麦位请求
+        LockAllMicrophoneReq lockAllMicrophoneReq = 20; // 麦位状态相关0------锁定全部麦位请求(一键锁麦)
+        UnLockAllMicrophoneReq unLockAllMicrophoneReq = 21; // 麦位状态相关1------解锁全部麦位请求(一键解麦)
+
+        LockSeatVoiceReq lockSeatVoiceReq = 22; // 麦位状态相关3------闭麦请求
+        UnLockSeatVoiceReq unLockSeatVoiceReq = 23; // 麦位状态相关1------解除闭麦请求
+
+        HoldOnMicroPhoneReq holdOnMicroPhoneReq = 24; // 抱麦请求
+        KickYouOutReq kickYouOutReq = 25; // 踢出房间请求
+        SetSuperAdminReq setSuperAdminReq = 26; // 设置为超级管理员请求
+        CancelSuperAdminReq cancelSuperAdminReq = 27; // 取消超级管理员请求
+        SetAdminReq setAdminReq = 28; // 设置为管理员请求
+        CancelAdminReq cancelAdminReq = 29; // 取消管理员请求
+        ExchangeSeatLayoutReq exchangeSeatLayoutReq = 30; // 切换麦位布局请求
+        WordsNotAllowedAllReq wordsNotAllowedAllReq = 31; // 关闭公屏请求
+        WordsAllowedAllReq wordsAllowedAllReq = 32; // 开启公屏请求
+        GivePresentsReq givePresentsReq = 33; // 送礼物请求
+        GiveLuckyBagPresentReq giveLuckyBagPresentReq = 34; // 送福袋请求
+        GivePresentsUseBackpackReq givePresentsUseBackpackReq = 35; // 送背包请求
+        PrivilegeCardsReq privilegeCardsReq = 36; // 特权卡列表请求
+        UsePrivilegeCardReq usePrivilegeCardReq = 37; // 使用特权卡请求
+        OpenLoveNumReq openLoveNumReq = 38; // 开启心动值请求
+        CloseLoveNumReq closeLoveNumReq = 39; // 关闭心动值请求
+        ChannelRankingsReq channelRankingsReq = 40; // 房间排行榜请求
+        AnnouncementSettingReq announcementSettingReq = 41; // 设置公告请求
+        OnlineUserReq onlineUserReq = 42; // 在线用户列表请求
+        PkTopicsReq pkTopicsReq = 43; // PK话题列表请求
+        CreatePkGameReq createPkGameReq = 44; // 创建PK请求
+        SearchPkChannelReq searchPkChannelReq = 45; // 搜索PK房间请求
+        AskChannelPkReq askChannelPkReq = 46; // 发起跨厅PK请求
+        AcceptChannelPkReq acceptChannelPkReq = 47; // 接受跨厅PK请求
+        RefuseChannelPkReq refuseChannelPkReq = 48; // 拒绝跨厅PK请求
+        StopPkGameReq stopPkGameReq = 49; // 停止PK请求
+        PkLogReq pkLogReq = 50; // PK记录请求
+        RandomChannelNameReq randomChannelNameReq = 51; // 随机房间名称请求
+        ChannelGiftWallReq channelGiftWallReq = 52; // 房间礼物墙请求
+        JoinChannelBlackListReq joinChannelBlackListReq = 53; // 加入房间黑名单请求
+        RemoveChannelBlackListReq removeChannelBlackListReq = 54; // 取消房间黑名单请求
+        ChannelAdminListReq channelAdminListReq = 55; // 房间管理员列表请求
+        ChannelBlackListReq channelBlackListReq = 56; // 房间黑名单用户列表请求
+        // 麦位锁状态相关
+        TurnOntheMicrophoneReq turnOntheMicrophoneReq  = 57; // 麦位状态相关2------闭麦（锁麦并禁麦）
+        TurnOfftheMicrophoneReq turnOfftheMicrophoneReq = 58; // 麦位状态相关1------开麦（解锁麦并开麦）
+        AfterJoinReq afterJoinReq = 59; // 加入房间之后请求
+
+        ChannelProhibitListReq channelProhibitListReq = 60; // 房间禁言用户列表请求
+        GivePresentsFansClubReq givePresentsFansClubReq = 61; // 送粉丝团礼物请求
+
+        EmptyLoveNumReq emptyLoveNumReq = 62; // 清空心动值请求
+
+        BuyExpressionReq buyExpressionReq = 71; // 购买动作表情
+        CommitExpressionReq commitExpressionReq = 72; //做动作表情
+
+        LoadRocketInfoReq loadRocketInfoReq = 101;//加载火箭数据
+        HoursListReq hoursListReq = 102;//小时榜数据
+        MyClubReq myClubReq = 103;//我的/Ta粉丝团信息请求
+        JoinClubReq joinClubReq = 104;//加入粉丝团请求
+        LoadExpressionReq loadExpressionReq = 105; //加载动作表情
+        PersonalChannelInfoReq personalChannelInfoReq= 106; //个播房间信息请求
+        PersonalSeatsConfigReq personalSeatsConfigReq= 107; //设置个播模式观众席状态请求
+        PersonalLiveConfigReq personalLiveConfigReq= 108; //设置个播模式直播状态请求
+        WishGiftInfoReq wishGiftInfoReq= 109; //获得心愿礼物（查询任务进度)请求
+        WishGiftConfigReq wishGiftConfigReq= 110; //设置心愿礼物请求
+        WishGiftRestartReq wishGiftRestartReq= 111; //重启心愿礼物请求
+        WishGiftDelReq wishGiftDelReq= 112; //删除心愿礼物请求
+        UserPlayInfoReq userPlayInfoReq= 113; //获取用户娱乐玩法相关信息请求
+    }
+}
+
+// 房间相关响应
+message ChannelResponse {
+    oneof body {
+        CreateRes createRes = 1; // 创建房间响应
+        JoinRes joinRes = 2; // 加入房间响应
+        BackRes backRes = 3; // 回到房间响应
+        ExitRes exitRes = 4; // 退出房间响应
+        RealTimeInfoRes realTimeInfoRes = 5; // 房间实时信息响应(房间每5秒轮询)
+        OnlineReportRes onlineReportRes = 6; // 心跳响应(房间每2分钟轮询)
+        DetailRes detailRes = 7; // 房间详情响应
+        EditChannelRes editChannelRes = 8; // 编辑房间信息响应
+        TagsRes tagsRes = 9; // 礼物栏标签列表响应
+        GiftListRes giftListRes = 10; // 礼物/福袋/背包列表响应
+        ViewInfoRes viewInfoRes = 11; // 房间内查看用户信息响应
+        PickUpMicroPhoneRes pickUpMicroPhoneRes = 12; // 上麦响应
+        PickUpMicroPhoneCompelRes pickUpMicroPhoneCompelRes = 13; // 强制上麦响应
+        PutDownMicroPhoneRes putDownMicroPhoneRes = 14; // 下麦响应
+        ExchangeMicroPhoneRes exchangeMicroPhoneRes = 15; // 换麦响应
+        WordsNotAllowedRes wordsNotAllowedRes = 16; // 禁止发言(不能发公屏)响应
+        WordsAllowedRes wordsAllowedRes = 17; // 解除禁言(允许发公屏)响应
+        // 麦位锁状态相关
+        LockMicroPhoneRes lockMicroPhoneRes = 18; // 锁定麦位响应
+        UnLockMicrophoneRes unLockMicrophoneRes = 19; // 解锁麦位响应
+        LockAllMicrophoneRes lockAllMicrophoneRes = 20; // 锁定全部麦位响应
+        UnLockAllMicrophoneRes unLockAllMicrophoneRes = 21; // 解锁全部麦位响应
+        LockSeatVoiceRes lockSeatVoiceRes = 22; // 闭麦响应
+        UnLockSeatVoiceRes unLockSeatVoiceRes = 23; // 解除闭麦响应
+
+        HoldOnMicroPhoneRes holdOnMicroPhoneRes = 24; // 抱麦响应
+        KickYouOutRes kickYouOutRes = 25; // 踢出房间响应
+        SetSuperAdminRes setSuperAdminRes = 26; // 设置为超级管理员响应
+        CancelSuperAdminRes cancelSuperAdminRes = 27; // 取消超级管理员响应
+        SetAdminRes setAdminRes = 28; // 设置为管理员响应
+        CancelAdminRes cancelAdminRes = 29; // 取消管理员响应
+        ExchangeSeatLayoutRes exchangeSeatLayoutRes = 30; // 切换麦位布局响应
+        WordsNotAllowedAllRes wordsNotAllowedAllRes = 31; // 关闭公屏响应
+        WordsAllowedAllRes wordsAllowedAllRes = 32; // 开启公屏响应
+        GivePresentsRes givePresentsRes = 33; // 送礼物响应
+        GiveLuckyBagPresentRes giveLuckyBagPresentRes = 34; // 送福袋响应
+        GivePresentsUseBackpackRes givePresentsUseBackpackRes = 35; // 送背包响应
+        PrivilegeCardsRes privilegeCardsRes = 36; // 特权卡列表响应
+        UsePrivilegeCardRes usePrivilegeCardRes = 37; // 使用特权卡响应
+        OpenLoveNumRes openLoveNumRes = 38; // 开启心动值响应
+        CloseLoveNumRes closeLoveNumRes = 39; // 关闭心动值响应
+        ChannelRankingsRes channelRankingsRes = 40; // 房间排行榜响应
+        AnnouncementSettingRes announcementSettingRes = 41; // 设置公告响应
+        OnlineUserRes onlineUserRes = 42; // 在线用户列表响应
+        PkTopicsRes pkTopicsRes = 43; // PK话题列表响应
+        CreatePkGameRes createPkGameRes = 44; // 创建PK响应
+        SearchPkChannelRes searchPkChannelRes = 45; // 搜索Pk房间响应
+        AskChannelPkRes askChannelPkRes = 46; // 发起跨厅PK响应
+        AcceptChannelPkRes acceptChannelPkRes = 47; // 接受跨厅PK响应
+        RefuseChannelPkRes refuseChannelPkRes = 48; // 拒绝跨厅PK响应
+        StopPkGameRes stopPkGameRes = 49; // 停止PK请求
+        PkLogRes pkLogReqs = 50; // PK记录响应
+        RandomChannelNameRes randomChannelNameRes = 51; // 随机房间名称响应
+        ChannelGiftWallRes channelGiftWallRes = 52; // 房间礼物墙响应
+        JoinChannelBlackListRes joinChannelBlackListRes = 53; // 加入房间黑名单响应
+        RemoveChannelBlackListRes removeChannelBlackListRes = 54; // 取消房间黑名单响应
+        ChannelAdminListRes channelAdminListRes = 55; // 房间管理员列表响应
+        ChannelBlackListRes channelBlackListRes = 56; // 房间黑名单用户列表响应
+        // 麦位锁状态相关
+        TurnOntheMicrophoneRes turnOntheMicrophoneRes  = 57; // 麦位状态相关2------开麦（锁麦并禁麦）
+        TurnOfftheMicrophoneRes turnOfftheMicrophoneRes = 58; // 麦位状态相关1------禁麦（解锁麦并开麦）
+        AfterJoinRes afterJoinRes = 59; // 加入房间之后请求
+
+        ChannelProhibitListRes channelProhibitListRes = 60; // 房间禁言用户列表响应
+        GivePresentsFansClubRes givePresentsFansClubRes = 61; // 送粉丝团礼物响应
+        EmptyLoveNumRes emptyLoveNumRes = 62; // 清空心动值响应
+
+        BuyExpressionRes buyExpressionRes = 71; // 购买动作表情
+        CommitExpressionRes commitExpressionRes = 72; //做动作表情
+
+        LoadRocketInfoRes loadRocketInfoRes = 101;//加载火箭数据
+        HoursListRes hoursListRes = 102;//小时榜数据
+        MyClubRes myClubRes = 103;//我的/Ta粉丝团信息响应
+        JoinClubRes joinClubRes = 104;//加入粉丝团响应
+        LoadExpressionRes loadExpressionRes = 105; //加载动作表情
+        PersonalChannelInfoRes personalChannelInfoRes= 106; //个播房间信息响应
+        PersonalSeatsConfigRes personalSeatsConfigRes= 107; //设置个播模式观众席状态响应
+        PersonalLiveConfigRes personalLiveConfigRess= 108; //设置个播模式直播状态响应
+        WishGiftInfoRes wishGiftInfoRes= 109; //获得心愿礼物（查询任务进度)响应
+        WishGiftConfigRes wishGiftConfigRes= 110; //设置心愿礼物响应
+        WishGiftRestartRes wishGiftRestartRes= 111; //重启心愿礼物响应
+        WishGiftDelRes wishGiftDelRes= 112; //删除心愿礼物响应
+        UserPlayInfoRes userPlayInfoRes= 113; //获取用户娱乐玩法相关信息响应
+    }
+}
+
+// 创建房间请求
+message CreateReq {
+    int32 menuId = 1; // 菜单id
+    string channelName = 2; // 房间名称
+    ChannelType channelType = 3; // 房间模式
+}
+// 创建房间响应
+message CreateRes {
+    UserInChannel myself = 1; // 用户个人信息
+    ChannelVo channel = 2; // 房间信息
+    repeated UserInSeats userInSeats = 3; // 麦位列表信息
+    string channelToken = 4; // 房间声网token
+    repeated WealthUsers WealthUsers = 5; // 守护值前三用户信息
+    ActivityInfo activityInfo = 6; // 当前活动信息
+    ActiveStatus activeStatus = 7; // 游戏状态信息
+    repeated MedalList medalList = 8; // 勋章信息
+    ChannelSetting channelSetting = 9; // 房间设置信息
+    bool isOpenChannel = 10; // 是否是公开厅 0:否 1:是
+    int32 giveSelf = 11; // 是否可以送礼给自己 0:否 1:是
+    ChannelOther other = 12; // 房间其他信息
+    BubbleInfo bubbleInfo = 13; // 气泡框,客户端用,后端不返回数据
+    Mount mount = 14; // 坐骑信息
+    AdmissionEffects admissionEffects = 15; // 入场特效
+    HonouredGuestCard honouredGuestCard = 16; // 贵宾卡信息
+    DressUpInfo dressUpInfo = 17; // 装扮信息
+}
+// 守护值前三用户信息
+message WealthUsers {
+    string userId = 1; // 用户系统id
+    string avatarUrl = 2; // 头像
+    int32 giftValue = 3; // 礼物值
+}
+// 当前活动信息
+message ActivityInfo {
+    PkGame pkGame = 1; // pk信息
+    repeated ActivityList activityList = 2; // H5活动列表
+    repeated ActivityList halfActivityList = 3; // H5活动列表(半屏)
+}
+// PK信息
+message PkGame {
+    string channelId = 1; // 房间id
+    string pkRoundId = 2; // pk回合id
+    string topic = 3; // pk话题
+    PkType type = 4; // pk类型
+    int32 duration = 5; // 时长
+    int32 blueTeamScore = 6; // 蓝方分数
+    int32 redTeamScore = 7; // 红方分数
+    int64 createTime = 8; // 开始时间
+    int64 endTime = 9; // 结束时间
+    repeated ParticipantVo participants = 10; // 1v1或团战4v4时代表参与者列表,跨厅时代表红方参与者列表
+    repeated ParticipantVo blueParticipants = 11; // 蓝方参与者列表(跨厅pk返回)
+    repeated PkBossUserVo pkBossUsers = 12; // 1v1或团战4v4时代表送礼老板列表,跨厅时代表红方老板列表
+    repeated PkBossUserVo bluePkBossUsers = 13; // 蓝方老板列表(跨厅pk返回)
+    PkChannelInfoVo redChannelInfo = 14; // 红方房间信息(跨厅pk返回)
+    PkChannelInfoVo blueChannelInfo = 15; // 蓝方房间信息(跨厅pk返回)
+    int32 status = 16; // pk状态 0已结束 1进行中
+    int64 systemTime = 17; // 系统当前时间 注：1v1或团战创建pk、跨厅接受pk、创建房间、加入房间会返回当前服务器时间
+    repeated UserInSeats redUserInSeats = 18; // 红方房间麦位列表信息（跨厅pk个播房间返回）
+    repeated UserInSeats blueUserInSeats = 19; // 蓝方房间麦位列表信息（跨厅pk个播房间返回）
+}
+// H5活动
+message ActivityList {
+    string title = 1; // 活动标题
+    string imgUrl = 2; // 活动图标
+    string linkValue = 3; // 跳转内容
+    int32 linkType = 4; // 跳转类型 (1.浏览器)
+    int64 id = 5;// id
+}
+// 游戏状态信息
+message ActiveStatus {
+    int32 activitySwich = 1; // 活动入口(0隐藏 1显示)
+    repeated Lotterys lotterys = 2; // 抽奖入口列表
+    int32 pkGame = 3; // pk入口(0隐藏 1显示)
+    int32 eidolon = 4; // 幻灵入口(0隐藏 1显示)
+    int32 listsHoursSwitch = 5; // 是否显示小时榜(0隐藏 1显示)
+}
+// 抽奖入口信息
+message Lotterys {
+    string lotteryIcon = 1; // 图标
+    int32 lotteryType = 2; // 抽奖入口类型 1 2普通宝箱 3嘉年华宝箱 4礼物工坊 5冒泡泡 6星座盲盒
+    int32 positionType = 3; // 展示位置 1轮播 2工具箱 3轮播图和工具箱
+}
+// 房间其他信息
+message ChannelOther {
+    int32 collectFlag = 1; // 用户是否收藏该房间(0未收藏1已收藏)
+    GameNotice gameNotice = 2; // 游戏浮窗通知
+    int32 isFansClub = 3; // 该房主是否创建了粉丝团 0否1是
+    int32 isFansUser = 4; // 是否是该房主的粉丝团成员 0否1是
+    int32 liveSwitch = 5; // 直播开关 0关1开 （个播返回）
+    int32 seatsSwitch = 6; // 观众席开关 0关1开（个播返回）
+    int64 clubId = 7; //粉丝团Id
+}
+// 游戏浮窗通知
+message GameNotice {
+    string content = 1; // 浮窗内容
+    int32 duration = 2; // 时长,单位秒
+    int32 lotteryType = 3; // 抽奖类型
+}
+// 房间设置信息
+message ChannelSetting {
+    string announceTitle = 1; // 公告标题
+    string announceContent = 2; // 公告内容
+    int32 lovenumSwitch = 3; // 心动值开关 0关 1开
+    int32 seatLayout = 4; // 麦位布局 1:横向排列(传统布局) 2:纵向排列(聊天模式)
+    int32 coverId = 5; // 背景Id
+    int32 seat9Show = 6; // 房间第10个座位是否显示0隐藏1显示
+    int32 seatCount = 7; // 房间模式座位展示数量（1-10）
+}
+
+// 加入房间请求
+message JoinReq {
+    string channelId = 1; // 房间id
+    string password = 2; // 房间密码,没密码可不传
+}
+// 加入房间响应
+message JoinRes {
+    UserInChannel myself = 1; // 用户个人信息
+    ChannelVo channel = 2; // 房间信息
+    repeated UserInSeats userInSeats = 3; // 麦位列表信息
+    string channelToken = 4; // 房间声网token
+    repeated WealthUsers WealthUsers = 5; // 守护值前三用户信息
+    ActivityInfo activityInfo = 6; // 当前活动信息
+    ActiveStatus activeStatus = 7; // 游戏状态信息
+    repeated MedalList medalList = 8; // 勋章信息
+    ChannelSetting channelSetting = 9; // 房间设置信息
+    bool isOpenChannel = 10; // 是否是公开厅 0:否 1:是
+    int32 giveSelf = 11; // 是否可以送礼给自己 0:否 1:是
+    ChannelOther other = 12; // 房间其他信息
+    UserVo owner = 13; // 房主个人信息
+    Mount mount = 14; // 坐骑信息
+    AdmissionEffects admissionEffects = 15; // 入场特效
+    BubbleInfo bubbleInfo = 16; // 气泡框,客户端用,后端不返回数据
+    HonouredGuestCard honouredGuestCard = 17; // 贵宾卡信息
+    DressUpInfo dressUpInfo = 18; // 装扮信息
+}
+// 坐骑信息
+message Mount {
+    string dressName = 1; // 名称
+    string effectUrl = 2; // 特效url,优先取该字段,没有则取dressIconSvga字段
+    string dressIcon = 3; // 静态图
+    string dressIconSvga = 4; // 动态图
+}
+// 入场特效
+message AdmissionEffects {
+    string dressName = 1; // 名称
+    string effectUrl = 2; // 特效url地址
+}
+
+// 回到房间请求
+message BackReq {
+}
+// 回到房间响应
+message BackRes {
+    UserInChannel myself = 1; // 用户个人信息
+    ChannelVo channel = 2; // 房间信息
+    repeated UserInSeats userInSeats = 3; // 麦位列表信息
+    string channelToken = 4; // 房间声网token
+    repeated WealthUsers WealthUsers = 5; // 守护值前三用户信息
+    ActivityInfo activityInfo = 6; // 当前活动信息
+    ActiveStatus activeStatus = 7; // 游戏状态信息
+    repeated MedalList medalList = 8; // 勋章信息
+    ChannelSetting channelSetting = 9; // 房间设置信息
+    bool isOpenChannel = 10; // 是否是公开厅 0:否 1:是
+    int32 giveSelf = 11; // 是否可以送礼给自己 0:否 1:是
+    ChannelOther other = 12; // 房间其他信息
+    UserVo owner = 13; // 房主个人信息
+    Mount mount = 14; // 坐骑信息
+    AdmissionEffects admissionEffects = 15; // 入场特效
+    BubbleInfo bubbleInfo = 16; // 气泡框,客户端用,后端不返回数据
+    DressUpInfo dressUpInfo = 17; // 装扮信息
+}
+
+// 退出房间请求
+message ExitReq {
+    string channelId = 1; // 房间id
+}
+// 退出房间响应
+message ExitRes {
+    ChannelVo channel = 1; // 房间信息
+}
+
+// 房间实时信息请求(房间每5秒轮询)
+message RealTimeInfoReq {
+    string channelId = 1; // 房间id
+    string ownerId = 2; // 房主id
+    string pkRoundId = 3; // pk回合id,pk存在时传
+
+}
+// 房间实时信息响应(房间每5秒轮询)
+message RealTimeInfoRes {
+    int32 onlineNumber = 1; // 右上角在线人数
+    repeated UserInSeats userInSeats = 2; // 麦位列表
+    repeated WealthUsers wealthUsers = 3; // 前三名财富值用户列表
+}
+
+// 心跳请求(房间每2分钟轮询)
+message OnlineReportReq {
+    string channelId = 1; // 房间id
+}
+// 心跳响应(房间每2分钟轮询)
+message OnlineReportRes {
+}
+
+
+// 房间详情请求
+message DetailReq {
+    string channelId = 1; // 房间id
+}
+// 房间详情响应
+message DetailRes {
+    repeated AdminList adminList = 1; // 管理员列表
+    ChannelDetail channel = 2; // 房间详情信息
+    FamilyInChannel family = 3; // 房间内家族信息
+}
+// 管理员列表
+message AdminList {
+    string channelId = 1; // 房间id
+    string userId = 2; // 用户系统id
+    int32 accountId = 3; // 用户id
+    string nickname = 4; // 昵称
+    string avatarUrl = 5; // 头像
+    Gender gender = 6; // 性别
+    int32 seat = 7; // 麦位号
+    PowerType powerType = 8; // 权限 OWNER:房主 SUPER_ADMIN:超级管理员 ADMIN:管理员 NORMAL:普通用户 FAMILY_OWNER:公会会长 BLACKLIST:黑名单用户
+}
+// 房间详情信息
+message ChannelDetail {
+    string channelId = 1; // 房间id
+    int32 channelNo = 2; // 房间号
+    string channelName = 3; // 房间名称
+    int32 ownerAccountId = 4; // 房主账号
+}
+// 房间内家族信息
+message FamilyInChannel {
+    string id = 1; // 家族系统id
+    int32 accountId = 2; // 家族账号
+    string avatarUrl = 3; // 家族头像
+    string name = 4; // 家族名称
+}
+
+// 编辑房间信息请求
+message EditChannelReq {
+    string channelId = 1; // 房间id
+    string avatarUrl = 2; // 房间头像,不修改可不传
+    string channelPwd = 3; // 房间密码(四位),为空字符串表示解锁房间密码
+    string channelName = 4; // 房间名称,不修改可不传
+    string welcomingSpeech = 5; // 房间欢迎语,不修改可不传
+    int32 menuId = 6; // 菜单id,切换房间模式时传
+    string coverUrl = 7; // 房间背景,不修改可不传
+    ChannelType channelType = 8; // 模式类型,切换房间模式时传
+    bool updatePassword = 9; // 修改密码时传,false不修改,true修改
+    bool updateWelcomingSpeech = 10; // 修改欢迎语时传,false不修改,true修改
+    int32 coverId = 11; // 房间背景Id,不修改可不传
+}
+// 编辑房间信息响应
+message EditChannelRes {
+    ChannelVo channel = 1; // 房间信息
+}
+
+// 礼物栏标签列表请求
+message TagsReq {
+    string channelId = 1; // 房间id
+}
+// 礼物栏标签列表响应
+message TagsRes {
+    repeated Tags tags  = 1; // 标签列表
+}
+// 标签列表
+message Tags {
+    GiftTag tagType = 1; // tag类型 1:礼物;2:背包;3:福袋 4:特权卡
+    string name = 2; // 标签名称
+}
+
+// 礼物/福袋/背包列表请求
+message GiftListReq {
+    int32 current = 1; // 页数
+    int32 size = 2; // 每页数量大小
+    GiftTag tagType = 3; // 标签类型
+    string channelId = 4;// 房间id
+}
+// 礼物/福袋/背包列表响应
+message GiftListRes {
+    int32 total = 1; // 总数
+    int32 size = 2; // 每页数量
+    int32 current = 3; // 当前页
+    repeated GiftVo records = 4; // 礼物/福袋/背包列表
+}
+// 礼物/福袋/背包详情
+message GiftVo {
+    int32 giftId = 1; // id
+    string name = 2; // 名称
+    string iconUrl = 3; // 图标
+    int32 value = 4; // 礼物价值,为0时显示"免费"
+    string effects = 5; // 特效
+    string cornerIcon = 6; // 角标icon
+    int32 count = 7; // 礼物数量,类型为背包时返回
+    string explainUrl = 8; // 玩法说明,类型为福袋时返回
+    string lotteryEffcts = 9; // 开福袋特效,类型为福袋时返回
+    int64 expireTime = 10; // 背包礼物过期时间戳,类型为背包时返回
+    int32 giveStatus = 11; // 是否可赠送,0:否;1:是,类型为星座礼物类型时返回
+    int32 bannerType = 12;// 横幅类型;0:厅内;1:全服
+    string bannerContent = 13;//自定义告白语
+    int32 showPop = 14; //是否弹窗自定义告白语,0:否;1:是
+    int32 giftFlag = 15; //礼物标识(例如：粉丝团-是否入团礼物 (0否1是))
+    int32 level = 16; //等级限制
+    int64 expireTimeId = 17;// 过期时间戳ID
+    int64 dbTimestamp = 18;// 数据库系统时间戳(Id)
+}
+
+// 房间内查看用户信息请求
+message ViewInfoReq {
+    string channelId = 1; // 房间id
+    string targetId = 2; // 用户系统id
+}
+// 房间内查看用户信息响应
+message ViewInfoRes {
+    UserVo user = 1; // 用户信息
+    repeated MedalList medalList = 2; // 勋章信息
+    UserInChannel userInChannel = 3; // 用户在房间内信息
+    DressUpInfo dressUpInfo = 4; // 装扮信息
+    int32 following = 5; // 是否已关注对方 0:否 1:是
+    FollowStatus followStatus = 6; // 关注状态 0:未关注 1:已关注 2:互相关注
+    int32 blacklistStatus = 7; // 黑名单状态 0:未拉黑 1:拉黑
+    ChannelVo currentLocation = 8;//用户当前所在房间信息
+    EidolonInfo eidolonInfo = 9;// 幻灵数据
+    FansClubVo fansBadge = 10; // 粉丝团徽章信息
+    FansClubVo clubInfo = 11; // 我的/Ta的粉丝团信息
+    CollectionHallVo collectHallInfo = 12; // 用户礼物藏馆信息
+}
+
+// 上麦请求
+message PickUpMicroPhoneReq {
+    string channelId = 1; // 房间id
+    int32 seatIndex = 2; // 麦位号,0-8
+}
+// 上麦响应
+message PickUpMicroPhoneRes {
+    repeated UserInSeats userInSeats = 1; // 麦位用户列表
+}
+
+// 强制上麦请求
+message PickUpMicroPhoneCompelReq {
+    string channelId = 1; // 房间id
+    int32 seatIndex = 2; // 麦位号,0-8
+}
+// 强制上麦响应
+message PickUpMicroPhoneCompelRes {
+    repeated UserInSeats userInSeats = 1; // 麦位用户列表
+}
+
+// 下麦请求
+message PutDownMicroPhoneReq {
+    string channelId = 1; // 房间id
+    int32 seatIndex = 2; // 麦位号,0-8
+    string targetId = 3; // 抱下麦用户id,自己下麦可不传
+}
+// 下麦响应
+message PutDownMicroPhoneRes {
+    repeated UserInSeats userInSeats = 1; // 麦位用户列表
+}
+
+// 换麦请求
+message ExchangeMicroPhoneReq {
+    string channelId = 1; // 房间id
+    int32 seatIndex = 2; // 麦位号,0-8
+}
+// 换麦响应
+message ExchangeMicroPhoneRes {
+    repeated UserInSeats userInSeats = 1; // 麦位用户列表
+}
+
+// 禁止发言(不能发公屏)请求
+message WordsNotAllowedReq {
+    string channelId = 1; // 房间id
+    string targetId = 2; // 目标用户id
+}
+// 禁止发言(不能发公屏)响应
+message WordsNotAllowedRes {
+}
+
+// 解除禁言(允许发公屏)请求
+message WordsAllowedReq {
+    string channelId = 1; // 房间id
+    string targetId = 2; // 目标用户id
+}
+// 解除禁言(允许发公屏)响应
+message WordsAllowedRes {
+}
+
+// 锁定麦位请求
+message LockMicroPhoneReq {
+    string channelId = 1; // 房间id
+    int32 seatIndex = 2; // 麦位号,0-8
+}
+// 锁定麦位响应
+message LockMicroPhoneRes {
+    ChannelVo channel = 1; // 房间信息
+}
+
+// 解锁麦位请求
+message UnLockMicrophoneReq {
+    string channelId = 1; // 房间id
+    int32 seatIndex = 2; // 麦位号,0-8
+}
+// 解锁麦位响应
+message UnLockMicrophoneRes {
+    ChannelVo channel = 1; // 房间信息
+}
+
+// 锁定全部麦位请求
+message LockAllMicrophoneReq {
+    string channelId = 1; // 房间id
+}
+// 锁定全部麦位响应
+message LockAllMicrophoneRes {
+    ChannelVo channel = 1; // 房间信息
+}
+
+// 解锁全部麦位请求
+message UnLockAllMicrophoneReq {
+    string channelId = 1; // 房间id
+}
+// 解锁全部麦位响应
+message UnLockAllMicrophoneRes {
+    ChannelVo channel = 1; // 房间信息
+}
+
+// 闭麦请求
+message LockSeatVoiceReq {
+    string channelId = 1; // 房间id
+    int32 seatIndex = 2; // 麦位号,0-8
+}
+// 闭麦响应
+message LockSeatVoiceRes {
+    ChannelVo channel = 1; // 房间信息
+}
+
+// 解除闭麦请求
+message UnLockSeatVoiceReq {
+    string channelId = 1; // 房间id
+    int32 seatIndex = 2; // 麦位号,0-8
+}
+// 解除闭麦响应
+message UnLockSeatVoiceRes {
+    ChannelVo channel = 1; // 房间信息
+}
+
+// 开麦(允许麦克风说话)请求
+message TurnOntheMicrophoneReq {
+    string channelId = 1; // 房间id
+    string targetId = 2; // 目标用户Id
+}
+// 开麦(允许麦克风说话)响应
+message TurnOntheMicrophoneRes {
+}
+
+// 禁麦(禁止麦克风说话)请求
+message TurnOfftheMicrophoneReq {
+    string channelId = 1; // 房间id
+    string targetId = 2; // 目标用户Id
+}
+// 禁麦(禁止麦克风说话)响应
+message TurnOfftheMicrophoneRes {
+}
+
+// 抱麦请求
+message HoldOnMicroPhoneReq {
+    string channelId = 1; // 房间id
+    int32 seatIndex = 2; // 麦位号,1-8
+    string targetId = 3; // 目标用户id
+}
+// 抱麦响应
+message HoldOnMicroPhoneRes {
+    repeated UserInSeats userInSeats = 1; // 麦位用户列表
+}
+
+// 踢出房间请求
+message KickYouOutReq {
+    string channelId = 1; // 房间id
+    string targetId = 2; // 目标用户id
+}
+// 踢出房间响应
+message KickYouOutRes {
+    string tip = 1; // 提示
+    repeated UserInSeats userInSeats = 2; // 麦位列表
+}
+
+// 设置为超级管理员请求
+message SetSuperAdminReq {
+    string channelId = 1; // 房间id
+    string targetId = 2; // 目标用户id
+}
+// 设置为超级管理员响应
+message SetSuperAdminRes {
+}
+
+// 取消超级管理员请求
+message CancelSuperAdminReq {
+    string channelId = 1; // 房间id
+    string targetId = 2; // 目标用户id
+}
+
+// 取消超级管理员响应
+message CancelSuperAdminRes {
+}
+
+// 设置为管理员请求
+message SetAdminReq {
+    string channelId = 1; // 房间id
+    string targetId = 2; // 目标用户id
+}
+// 设置为管理员响应
+message SetAdminRes {
+}
+
+// 取消管理员请求
+message CancelAdminReq {
+    string channelId = 1; // 房间id
+    string targetId = 2; // 目标用户id
+}
+// 取消管理员响应
+message CancelAdminRes {
+}
+
+// 切换麦位布局请求
+message ExchangeSeatLayoutReq {
+    string channelId = 1; // 房间id
+    int32 seatLayout = 2; // 麦位布局 1:横向排列(传统布局) 2:纵向排列(聊天模式)
+}
+// 切换麦位布局响应
+message ExchangeSeatLayoutRes {
+}
+
+// 关闭公屏请求
+message WordsNotAllowedAllReq {
+    string channelId = 1; // 房间id
+}
+// 关闭公屏响应
+message WordsNotAllowedAllRes {
+    ChannelVo channel = 1; // 房间信息
+}
+
+// 开启公屏请求
+message WordsAllowedAllReq {
+    string channelId = 1; // 房间id
+}
+// 开启公屏响应
+message WordsAllowedAllRes {
+    ChannelVo channel = 1; // 房间信息
+}
+
+// 送礼物请求
+message GivePresentsReq {
+    string channelId = 1; // 房间id
+    int32 giftId = 2; // 礼物id
+    int32 giftCount = 3; // 礼物数量
+    repeated string targetIds = 4; // 目标用户
+    int32 bannerType = 5;// 横幅类型;0:厅内;1:全服
+    string bannerContent = 6;//自定义告白语
+}
+// 送礼物响应
+message GivePresentsRes {
+    string userId = 1; // 用户系统id
+    GiftVo gift = 2; // 礼物信息
+    int32 lovenum = 3; // 心动值增加数值
+    repeated UserInSeats userInSeats = 4; // 麦位列表
+    repeated MedalList medalList = 5; // 勋章列表
+    int32 isGiftBanner = 6; // 是否发起横幅通知 0:不发起横幅,1:发起横幅
+    WalletVo wallet = 7; // 钱包信息
+    int32 diamondsAmount = 8; // 剩余钻石数量
+    int32 gameCoin = 9; // 游戏币数量
+    int32 crystalAmount = 10; // 剩余水晶数量
+    int64 systemTime = 11; // 系统时间戳
+}
+// 钱包信息
+message WalletVo {
+    string userId = 1; // 用户系统id
+    int32 diamondsAmount = 8; // 剩余钻石数量
+    int32 gameCoin = 9; // 游戏币数量
+    int32 crystalAmount = 10; // 剩余水晶数量
+}
+
+// 送福袋请求
+message GiveLuckyBagPresentReq {
+    string channelId = 1; // 房间id
+    int32 giftId = 2; // 礼物id
+    int32 giftCount = 3; // 礼物数量
+    repeated string targetIds = 4; // 目标用户
+}
+// 送福袋响应
+message GiveLuckyBagPresentRes {
+    string userId = 1; // 用户系统id
+    repeated LuckyGiftVo luckyGifts = 2; // 福袋礼物列表
+    int32 lovenum = 3; // 心动值增加数值
+    repeated UserInSeats userInSeats = 4; // 麦位列表
+    repeated MedalList medalList = 5; // 勋章列表
+    int32 isGiftBanner = 6; // 是否发起横幅通知 0:不发起横幅,1:发起横幅
+    WalletVo wallet = 7; // 钱包信息
+    int32 diamondsAmount = 8; // 剩余钻石数量
+    int32 gameCoin = 9; // 游戏币数量
+    int32 crystalAmount = 10; // 剩余水晶数量
+    int64 systemTime = 11; // 系统时间戳
+    string lotteryName = 12; // 福袋名称
+    string lotteryEffcts = 13; // 福袋动效
+}
+// 福袋礼物信息
+message LuckyGiftVo {
+    int32 giftId = 1; // 礼物id
+    string giftName = 2; // 礼物名称
+    int32 giftCount = 3; // 礼物数量
+    string giftIconUrl = 4; // 礼物icon
+    int32 lovenum = 5; // 心动值
+    int32 giftValue = 6; // 礼物价值
+    string giftEffects = 7; // 礼物动效,可返回空
+    string targetId = 8; // 收礼物用户Id
+    string targetName = 9; // 收礼用户昵称
+}
+
+// 送背包请求
+message GivePresentsUseBackpackReq {
+    string channelId = 1; // 房间id
+    int32 giftId = 2; // 礼物id
+    int32 giftCount = 3; // 礼物数量
+    repeated string targetIds = 4; // 目标用户
+    int32 bannerType = 5;// 横幅类型;0:厅内;1:全服
+    string bannerContent = 6;//自定义告白语
+    int64 expireTimeId = 7;// 礼物过期时间戳ID
+}
+// 送背包响应
+message GivePresentsUseBackpackRes {
+    string userId = 1; // 用户系统id
+    GiftVo gift = 2; // 礼物信息
+    int32 lovenum = 3; // 心动值增加数值
+    repeated UserInSeats userInSeats = 4; // 麦位列表
+    repeated MedalList medalList = 5; // 勋章列表
+    int32 isGiftBanner = 6; // 是否发起横幅通知 0:不发起横幅,1:发起横幅
+    WalletVo wallet = 7; // 钱包信息
+    int32 diamondsAmount = 8; // 剩余钻石数量
+    int32 gameCoin = 9; // 游戏币数量
+    int32 crystalAmount = 10; // 剩余水晶数量
+    int64 systemTime = 11; // 系统时间戳
+}
+
+// 送粉丝团礼物请求
+message GivePresentsFansClubReq {
+    string channelId = 1; // 房间id
+    int32 giftId = 2; // 礼物id
+    int32 giftCount = 3; // 礼物数量
+    repeated string targetIds = 4; // 目标用户
+    int32 bannerType = 5;// 横幅类型;0:厅内;1:全服
+    string bannerContent = 6;//自定义告白语
+}
+// 送粉丝团礼物响应
+message GivePresentsFansClubRes {
+    string userId = 1; // 用户系统id
+    GiftVo gift = 2; // 礼物信息
+    int32 lovenum = 3; // 心动值增加数值
+    repeated UserInSeats userInSeats = 4; // 麦位列表
+    repeated MedalList medalList = 5; // 勋章列表
+    int32 isGiftBanner = 6; // 是否发起横幅通知 0:不发起横幅,1:发起横幅
+    WalletVo wallet = 7; // 钱包信息
+    int32 diamondsAmount = 8; // 剩余钻石数量
+    int32 gameCoin = 9; // 游戏币数量
+    int32 crystalAmount = 10; // 剩余水晶数量
+    int64 systemTime = 11; // 系统时间戳
+}
+
+// 特权卡列表请求
+message PrivilegeCardsReq {
+    int32 current = 1; // 页数
+    int32 size = 2; // 每页数量大小
+    string targetId = 3; // 房主系统id
+}
+// 特权卡列表响应
+message PrivilegeCardsRes {
+    int32 total = 1; // 总数
+    int32 size = 2; // 每页数量
+    int32 current = 3; // 当前页
+    repeated PrivilegeCardVo records = 4; // 特权卡信息
+}
+// 特权卡信息
+message PrivilegeCardVo {
+    int64 privilegeCardId = 1; // 特权卡id
+    string cardName = 2; // 特权卡名称
+    string cardUrl = 3; // 特权卡图片链接
+    int32 cardType = 4; // 特权卡类型(0:公会卡 1:厅卡)
+    string cardDescription = 5; // 特权卡说明
+    int32 effectiveCount = 6; // 每日可使用的次数
+    int32 todayUseCount = 7; // 今日已使用的次数
+    int64 expireTime = 8; // 过期时间戳
+    int32 channelAvailableStatus = 9; // 房间是否可使用状态(0不可用 1可用)
+    int32 accountId = 10; // 所属用户账号
+    string userId = 11; // 所属用户系统id
+}
+
+// 使用特权卡请求
+message UsePrivilegeCardReq {
+    int64 privilegeCardId = 1; // 特权卡id
+    string targetId = 2; // 房主系统id
+}
+// 使用特权卡响应
+message UsePrivilegeCardRes {
+    int32 residueCount = 1; // 特权卡剩余次数(每日可使用的次数 - 今日已使用的次数 获得)
+    PrivilegeCardVo privilegeCard = 2; // 特权卡信息
+}
+
+// 开启心动值请求
+message OpenLoveNumReq {
+    string channelId = 1; // 房间id
+}
+// 开启心动值响应
+message OpenLoveNumRes {
+}
+
+// 关闭心动值请求
+message CloseLoveNumReq {
+    string channelId = 1; // 房间id
+}
+// 关闭心动值响应
+message CloseLoveNumRes {
+}
+
+// 清空心动值请求
+message EmptyLoveNumReq {
+    string channelId = 1; // 房间id
+    string targetId = 2; // 目标用户Id(清除指定用户必传)
+}
+// 清空心动值响应
+message EmptyLoveNumRes {
+    repeated UserInSeats userInSeats = 1; // 麦位列表信息
+}
+
+// 房间排行榜请求
+message ChannelRankingsReq {
+    string channelId = 1; // 房间id
+    ChannelRankType type = 2; // 类型
+}
+// 房间排行榜响应
+message ChannelRankingsRes {
+    repeated RankingVo rankings = 1; // 排名列表
+    RankingVo self = 2; // 个人排名信息
+}
+// 排名信息
+message RankingVo {
+    int32 index = 1; // 排名,-1代表没有送礼/收礼数据,-1代表送礼/收礼了但是不上榜,1-50代表上榜
+    string userId = 2; // 用户系统id
+    string accountId = 3; // 用户id
+    Gender gender = 4; // 性别
+    string nickname = 5; // 昵称
+    string avatarUrl = 6; // 头像
+    int32 giftValue = 7; // 财富值/魅力值
+    int32 seat = 8; // 所在麦位,0-8为主播位,99为观众,即没有在麦上
+    PowerType powerType = 9; // 权限
+    repeated MedalList userMedalList = 10; // 勋章列表
+    int32 differGiftValue = 11; // 和上一名相差守护值,个人排名才返回
+    int32 totalGiftValue = 12; // 守护总值,只有在线榜才返回
+    DressUpInfo dressUpInfo = 13; // 装扮信息,这里只返回了头像框信息
+    HonouredGuestCard honouredGuestCard = 14; // 贵宾卡信息
+    FansClubVo fansBadge = 15; // 粉丝团徽章信息
+}
+
+// 设置公告请求
+message AnnouncementSettingReq {
+    string channelId = 1; // 房间id
+    string announceTitle = 2; // 标题 (announceContent不为空必须传)
+    string announceContent = 3; // 内容
+}
+// 设置公告响应
+message AnnouncementSettingRes {
+    ChannelSetting channelSetting = 1; // 房间设置信息
+}
+
+// 在线用户列表请求
+message OnlineUserReq {
+    int32 current = 1; // 页数
+    int32 size = 2; // 每页数量大小
+    string channelId = 3; // 房间id
+    PowerType powerType = 4; // 角色权限（不传默认查全部）
+}
+// 在线用户列表响应
+message OnlineUserRes {
+    int32 total = 1; // 总数
+    int32 size = 2; // 每页数量
+    int32 current = 3; // 当前页
+    repeated RankingVo records = 4; // 用户列表
+}
+
+// PK话题列表请求
+message PkTopicsReq {
+}
+// PK话题列表响应
+message PkTopicsRes {
+    repeated PkTopicsVo pkTopics = 1; // PK话题信息
+}
+// PK话题信息
+message PkTopicsVo {
+    int32 id = 1; // 话题id
+    string name = 2; // 话题名称
+}
+
+// 创建PK请求
+message CreatePkGameReq {
+    string channelId = 1; // 房间id
+    string topic = 2; // 话题名称
+    PkType pkType = 3; // PK类型
+    int32 duration = 4; // 时长
+    string blueTeam = 5; // 1v1蓝方用户id
+    string redTeam = 6; // 1v1红方用户id
+}
+// 创建PK响应
+message CreatePkGameRes {
+    PkGame pkGame = 1; // pk信息
+}
+// 参与者信息
+message ParticipantVo {
+    string pkChannelId = 1; // pk房间id
+    string pkId = 2; // pk回合id
+    PkTeam team = 3; // pk队伍
+    string userId = 4; // 用户系统id
+    int32 accountId = 5; // 用户账号id
+    string nickname = 6; // 用户昵称
+    string avatarUrl = 7; // 用户头像
+    int32 lovenum = 8; // 心动值
+    //Gender gender = 9; // 性别,长连接也存在该字段,不兼容
+}
+// 送礼老板信息
+message PkBossUserVo {
+    string userId = 1; // 用户系统id
+    int32 accountId = 2; // 用户账号id
+    string nickname = 3; // 昵称
+    string avatarUrl = 4; // 头像
+    int32 value = 5; // 礼物价值
+    PkTeam team = 6; // pk队伍
+}
+// 跨厅房间信息
+message PkChannelInfoVo {
+    string channelId = 1; // 房间id
+    int32 channelNo = 2; // 房间号
+    string channelName = 3; // 房间名称
+    string avatarUrl = 4; // 头像
+    string ownerId = 5; // 房主Id
+    int32 seat0Status = 6; // 0号麦位锁状态
+    int32 seat1Status = 7; // 1号麦位锁状态
+    int32 seat2Status = 8; // 2号麦位锁状态
+    int32 seat3Status = 9; // 3号麦位锁状态
+    int32 seat4Status = 10; // 4号麦位锁状态
+    int32 seat5Status = 11; // 5号麦位锁状态
+    int32 seat6Status = 12; // 6号麦位锁状态
+    int32 seat7Status = 13; // 7号麦位锁状态
+    int32 seat8Status = 14; // 8号麦位锁状态
+    int32 seatsSwitch = 15; // 观众席开关
+}
+
+// 搜索Pk房间请求
+message SearchPkChannelReq {
+    int32 accountId = 1; // 搜索id
+}
+// 搜索Pk房间响应
+message SearchPkChannelRes {
+    repeated PkChannelInfoVo pkChannelInfo = 1; // pk房间信息
+}
+
+// 发起跨厅PK请求
+message AskChannelPkReq {
+    string channelId = 1; // 当前所在房间id
+    string targetChannelId = 2; // 目标房间id
+    int32 duration = 3; // pk时长
+    string topic = 4; // pk话题
+}
+// 发起跨厅PK响应
+message AskChannelPkRes {
+}
+
+// 接受跨厅PK请求
+message AcceptChannelPkReq {
+    string channelId = 1; // 当前所在房间id
+    string targetChannelId = 2; // 目标房间id
+    int32 duration = 3; // pk时长
+    string topic = 4; // pk话题
+}
+// 接受跨厅PK响应
+message AcceptChannelPkRes {
+}
+
+// 拒绝跨厅PK请求
+message RefuseChannelPkReq {
+    string channelId = 1; // 当前所在房间id
+    string targetChannelId = 2; // 目标房间id
+    int32 duration = 3; // pk时长
+    string topic = 4; // pk话题
+}
+// 拒绝跨厅PK响应
+message RefuseChannelPkRes {
+}
+
+// 停止PK请求
+message StopPkGameReq {
+    string channelId = 1; // 房间id
+    string pkRoundId = 2; // pk回合id
+    PkType type = 3; // pk类型
+    string targetChannelId = 4; // 结束跨厅pk时传,目标房间id
+}
+// 停止PK响应
+message StopPkGameRes {
+    PkGame pkGame = 1; // pk信息
+}
+
+// PK记录请求
+message PkLogReq {
+    int32 current = 1; // 页数
+    int32 size = 2; // 每页数量大小
+    string channelId = 3; // 房间id
+}
+// PK记录响应
+message PkLogRes {
+    int32 total = 1; // 总数
+    int32 size = 2; // 每页数量
+    int32 current = 3; // 当前页
+    repeated PkGame records = 4; // pk信息
+}
+
+// 随机房间名称请求
+message RandomChannelNameReq {
+}
+// 随机房间名称响应
+message RandomChannelNameRes {
+    repeated RandomChannelNameVo randomChannelName = 1; // 随机名称信息
+}
+// 随机名称信息
+message RandomChannelNameVo {
+    int32 menuId = 1; // 菜单id
+    repeated string names = 2; // 房间名称列表
+}
+
+// 房间礼物墙请求
+message ChannelGiftWallReq {
+    string channelId = 1; // 房间id
+}
+// 房间礼物墙响应
+message ChannelGiftWallRes {
+    int32 total = 1; // 总数
+    int32 size = 2; // 每页数量
+    int32 current = 3; // 当前页
+    repeated ChannelGiftWallVo records = 4; // 礼物墙信息
+}
+// 礼物墙信息
+message ChannelGiftWallVo {
+    int32 giftId = 1; // 礼物id
+    string giftName = 2; // 礼物名称
+    int32 giftCount = 3; // 礼物数量
+    string giftIconUrl = 4; // 礼物icon
+    int32 timedCornerMark = 5; // 是否显示限时角标 0.不显示 1.显示
+}
+
+// 加入房间黑名单请求
+message JoinChannelBlackListReq {
+    string channelId = 1; // 房间id
+    string targetId = 2; // 拉黑用户id
+}
+// 加入房间黑名单响应
+message JoinChannelBlackListRes {
+}
+
+// 取消房间黑名单请求
+message RemoveChannelBlackListReq {
+    string channelId = 1; // 房间id
+    string targetId = 2; // 取消拉黑用户id
+}
+// 取消房间黑名单响应
+message RemoveChannelBlackListRes {
+}
+
+// 房间管理员列表请求
+message ChannelAdminListReq {
+    string channelId = 1; // 房间id
+}
+// 房间管理员列表响应
+message ChannelAdminListRes {
+    repeated ChatChannelUserVo superAdminList = 1; // 超级管理员列表
+    repeated ChatChannelUserVo adminList = 2; // 管理员列表
+}
+
+// 房间黑名单用户列表请求
+message ChannelBlackListReq {
+    int32 current = 1; // 页数
+    int32 size = 2; // 每页数量大小
+    string channelId = 3; // 房间id
+    string searchStr = 4; // 搜索关键字
+}
+// 房间黑名单用户列表响应
+message ChannelBlackListRes {
+    int32 total = 1; // 总数
+    int32 size = 2; // 每页数量
+    int32 current = 3; // 当前页
+    repeated RankingVo records = 4; // 用户列表
+}
+
+// 房间禁言用户列表请求
+message ChannelProhibitListReq {
+    int32 current = 1; // 页数
+    int32 size = 2; // 每页数量大小
+    string channelId = 3; // 房间id
+    string searchStr = 4; // 搜索关键字
+}
+// 房间黑名单用户列表响应
+message ChannelProhibitListRes {
+    int32 total = 1; // 总数
+    int32 size = 2; // 每页数量
+    int32 current = 3; // 当前页
+    repeated RankingVo records = 4; // 用户列表
+}
+
+message AfterJoinReq {
+    string channelId = 1; // 房间id
+}
+
+message AfterJoinRes {
+    EidolonInfo eidolonInfo = 1;// 幻灵数据
+}
+
+message LoadRocketInfoReq {
+    string channelId = 1; // 房间id
+}
+
+message LoadRocketInfoRes {
+    repeated Rocket list = 1; //火箭数据数组
+}
+
+message Rocket {
+    string channelId = 1;//房间id
+    string userId = 2;//用户id
+    string avatarUrl = 3;//用户头像
+    string nickname = 4;//用户昵称
+    string iconUrl = 5;//火箭图标
+    int32 alreadyCount = 6;//已达到顶级次数，不为空，默认为0
+    string animationUrl = 7;//火箭动画
+    int32 count = 8;//达到顶级次数（实时），不为空，默认为0*
+    int64 createTimeStamp = 9;//创建时间戳（秒）
+    int32 currentLevel = 10;//当前等级，不为空，默认为0*
+    int32 currentLevelMaxValue = 11;//当前等级的最大值
+    int64 currentTimeStamp = 12;//服务器当前时间戳（秒）
+    int32 totalLevel = 13;//总等级
+    int64 expireTimeStamp = 14;//过期时间戳（秒）
+    int32 height = 15;//icon的高度
+    int32 diffValue = 16;//距离下一等级还差多少值
+    int32 maxValue = 17;//最大级的值
+    int32 needReduceValue = 18;
+    int32 showLabel = 19;//是否显示新征程标签;0=不显示，1=显示*
+    int32 value = 20;//当前值
+}
+
+message HoursListReq {
+    string channelId = 1; // 房间id
+    int32 hourType = 2; // 小时榜类型 0：本小时， 1：上一小时
+}
+
+message HoursListRes {
+    repeated HoursTopListVo topList = 1; //小时榜-榜单列表
+    HoursTopListVo myRank = 2; // 我的房间排名
+    int64 remainSeconds = 3; //剩余秒数
+}
+
+//小时榜-榜单列表数据
+message HoursTopListVo {
+    int32 appFlag1 = 1; //平台类型
+    string avatarUrl = 2; //头像地址
+    string channelId = 3; //频道ID
+    string channelName = 4; //房间名称
+    int32 differCount = 5; //和上一名相差钻石数
+    int32 following = 6; //是否关注，0：未关注，1：已关注，2：互相关注（好友）
+    int32 giveGiftValue = 7; //一小时内收礼钻石数
+    int32 hoursRanking = 8; //排名
+    string ownerId = 9; //用户id
+    string ownerNickname = 10; //用户昵称
+    int32 pkStatus = 11; // pk状态 0无pk 1正在pk
+}
+
+//我的/Ta粉丝团信息请求
+message MyClubReq {
+    string targetId = 1; //目标用户Id(不为空默认查询他人信息)
+}
+//我的/Ta粉丝团信息响应
+message MyClubRes {
+    FansClubVo clubInfo = 1; // 我的/Ta的粉丝团信息
+    int32 badgeLevel = 2; // 默认勋章等级
+    string badgeIcon = 3; // 默认勋章Icon
+    FansClubVo userClubInfo = 4; // 粉丝团用户信息
+    IntimacyVo todayIntimacyInfo = 5; // 今日亲密度信息
+}
+
+//加入粉丝团请求
+message JoinClubReq {
+    int64 clubId = 1; //粉丝团Id
+    int32 giftId = 2; //礼物Id
+    int32 count = 3; //礼物数量
+    string channelId = 4; //当前房间Id
+}
+//加入粉丝团响应
+message JoinClubRes {
+    FansClubVo clubInfo = 1; // 我的/Ta的粉丝团信息
+    FansClubVo userClubInfo = 2; // 粉丝团用户信息
+    IntimacyVo todayIntimacyInfo = 3; // 今日亲密度信息
+}
+
+message BuyExpressionReq {
+    string channelId = 1; //频道ID
+    int64 id = 2;
+    int32 duration = 3; // 时长
+}
+
+message BuyExpressionRes {
+    int32 diamond = 1;// 剩余钻石
+}
+
+message CommitExpressionReq {
+    string channelId = 1; //频道ID
+    string expressionId = 2;//动作id
+}
+
+message CommitExpressionRes {
+}
+
+message LoadExpressionReq {
+    int32 current = 1; // 页数
+    int32 size = 2; // 每页数量大小
+    string channelId = 3; // 房间id
+}
+
+message LoadExpressionRes {
+    repeated Expression records = 1;//列表
+}
+
+message Expression {
+    string expressionId = 1;//表情id
+    string name = 2;//名称
+    string imgUrl = 3;//图标
+    string cornerIcon = 4;//角标
+    int64 id = 5;//id
+    int32 limitType = 6;//限定类型;1=免费,2=付费,3=财富魅力要求
+    string purchaseHint = 7;//购买提示
+    repeated GoodsPrice prices = 8;//价格
+    int32 status = 9;//状态;0=未购买，1=已购买
+    int32 purchaseHintType = 10;//购买提示类型;0=财富,1=魅力
+}
+
+//个播房间信息请求
+message PersonalChannelInfoReq {
+    string channelId = 1; // 房间id
+}
+//个播房间信息响应
+message PersonalChannelInfoRes {
+    int32 liveSwitch = 1; // 直播开关 0关1开
+    int32 seatsSwitch = 2; // 观众席开关 0关1开
+    int32 wishDisplay = 3; // 是否展示心愿礼物入口 0关1开
+    UserWishGiftVo userWishGift = 4; // 心愿礼物数据
+    FansClubGiftVo clubGiftInfo = 5; // 粉丝团默认入团礼物
+}
+
+//设置个播模式观众席状态请求
+message PersonalSeatsConfigReq{
+    string channelId = 1; // 房间id
+    int32 seatsSwitch = 2; // 观众席状态，0：关闭，1：开启
+}
+//设置个播模式观众席状态响应
+message PersonalSeatsConfigRes{
+}
+
+//设置个播模式直播状态请求
+message PersonalLiveConfigReq{
+    string channelId = 1; // 房间id
+    int32 liveSwitch = 2; // 直播开关，0：暂停，1：开启
+}
+//设置个播模式观众席状态响应
+message PersonalLiveConfigRes{
+}
+
+//获得心愿礼物（查询任务进度)请求
+message WishGiftInfoReq{
+    string channelId = 1; // 房间id
+}
+//获得心愿礼物（查询任务进度)响应
+message WishGiftInfoRes{
+    int32 finish = 1; // 是否已达成，0：进行中，1：已完成
+    int32 maxLimitValue = 2; // 最大礼物限制价值
+    repeated WishGiftProgress progressList = 3; // 心愿进度列表
+    repeated WishGifttopUser topUser = 4; // 前三用户列表
+    int32 userCount = 5; // 助力人数
+}
+
+//设置心愿礼物请求
+message WishGiftConfigReq{
+    string channelId = 1; // 房间id
+    int32 wishSwitch = 2; // 心愿礼物开关，0：关闭，1：开启
+    repeated UserWishGift userWishGifts = 3; // 心愿礼物列表，单个礼物参数（giftId：礼物id，giftCount：礼物数量）
+    repeated UserWishGift editWishGifts = 4; // 修改的心愿礼物列表，单个礼物参数（giftId：礼物id，giftCount：礼物数量）
+}
+//设置心愿礼物响应
+message WishGiftConfigRes{
+    int32 finish = 1; // 是否已达成，0：进行中，1：已完成
+    int32 maxLimitValue = 2; // 最大礼物限制价值
+    repeated WishGiftProgress progressList = 3; // 心愿进度列表
+    repeated WishGifttopUser topUser = 4; // 前三用户列表
+    int32 userCount = 5; // 助力人数
+}
+message UserWishGift{
+    int32 giftId = 1; // 礼物id
+    int32 giftCount = 2; // 礼物数量
+}
+
+//重启心愿礼物请求
+message WishGiftRestartReq{
+    string channelId = 1; // 房间id
+}
+//重启心愿礼物响应
+message WishGiftRestartRes{
+    int32 finish = 1; // 是否已达成，0：进行中，1：已完成
+    int32 maxLimitValue = 2; // 最大礼物限制价值
+    repeated WishGiftProgress progressList = 3; // 心愿进度列表
+    repeated WishGifttopUser topUser = 4; // 前三用户列表
+    int32 userCount = 5; // 助力人数
+}
+
+//删除心愿礼物请求
+message WishGiftDelReq{
+    string channelId = 1; // 房间id
+    int32 giftId = 2; // 礼物id
+}
+//删除心愿礼物响应
+message WishGiftDelRes{
+}
+
+//获取用户娱乐玩法相关信息请求
+message UserPlayInfoReq{
+    string channelId = 1; // 房间id
+    string targetId = 2; // 目标用户id
+}
+//获取用户娱乐玩法相关信息响应
+message UserPlayInfoRes{
+    CollectionHallVo collectHallInfo =1;
+}
