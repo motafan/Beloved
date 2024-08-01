@@ -398,7 +398,7 @@ extension Socket: WebSocketDelegate {
         case .cancelled:
             print("websocketDidCancelled")
         case .peerClosed:
-            break
+            onClose(reason: "Peer closed")
         }
         
     }
