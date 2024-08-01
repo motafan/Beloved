@@ -55,8 +55,6 @@ struct LoginPage: View {
             //            .offset(y: -20)
             .padding(.top, -20)
             
-            
-            
             Spacer()
             
             SignInWithAppleButton(
@@ -94,6 +92,7 @@ struct LoginPage: View {
                     })
             }
         }
+        .ignoresSafeArea(.keyboard, edges: .bottom)
     }
     
     var loginTop: some View {
