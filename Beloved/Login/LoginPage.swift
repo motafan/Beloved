@@ -35,23 +35,24 @@ struct LoginPage: View {
             
             VStack(spacing: 20) {
                 
-                Group {
-                    Button(action: {}) {
-                        Text("手机登录")
-                    }
-                    .foregroundColor(.pink.opacity(disabledPhoneLogin ? 0.5 : 1))
-                    .disabled(disabledPhoneLogin)
-                    
-                    Button(action: {}) {
-                        Text("一键登录")
-                    }
-                    
-                }
-                .frame(width: 200, height: 40)
-                .background(RoundedRectangle(cornerRadius: 8).fill(.foreground))
                 
+                Button(action: {}) {
+                    Text("手机登录")
+                        .frame(maxWidth: 200)
+                }
+                .tint(.black)
+                .keyboardShortcut(.defaultAction)
+                .disabled(disabledPhoneLogin)
+                
+                Button(action: {}) {
+                    Text("一键登录")
+                        .frame(maxWidth: 200)
+                }
                 
             }
+            .controlSize(.large)
+            .buttonStyle(.borderedProminent)
+            
             //            .offset(y: -20)
             .padding(.top, -20)
             
@@ -92,7 +93,7 @@ struct LoginPage: View {
                     })
             }
         }
-        .ignoresSafeArea(.keyboard, edges: .bottom)
+        .ignoresSafeArea(.keyboard)
     }
     
     var loginTop: some View {
@@ -123,29 +124,23 @@ struct LoginPage: View {
             Group {
                 HStack {
                     Image(systemName: "iphone.gen1")
-                    
-                    TextField(text: $phone, prompt: Text("请输入手机号")) {
-                        EmptyView()
-                    }
-                    .keyboardType(.phonePad)
+                    TextField("请输入手机号", text: $phone)
+                        .keyboardType(.phonePad)
                 }
                 
                 HStack {
                     Image(systemName: "lock")
-                    
-                    TextField(text: $code, prompt: Text("请输入验证码")) {
-                        EmptyView()
-                    }
-                    .textFieldStyle(.roundedBorder)
-                    .overlay(alignment: .trailing) {
-                        Button(action: {}) {
-                            Text("获取验证码")
-                                .font(.caption)
+                    TextField("请输入验证码", text: $code)
+                        .textFieldStyle(.roundedBorder)
+                        .overlay(alignment: .trailing) {
+                            Button(action: {}) {
+                                Text("获取验证码")
+                                    .font(.caption)
+                            }
+                            .buttonStyle(.borderedProminent)
+                            .tint(.yellow)
+                            .padding(.trailing, 3)
                         }
-                        .buttonStyle(.borderedProminent)
-                        .tint(.yellow)
-                        .padding(.trailing, 3)
-                    }
                 }
             }
             .textFieldStyle(.roundedBorder)

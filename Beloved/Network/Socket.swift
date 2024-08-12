@@ -69,12 +69,6 @@ public extension Socket {
         let response = try await send(configure: configure)
         return response[keyPath: keyPath]
     }
-    
-    //    func send<T>(keyPath: KeyPath<STResponse, T>, configure: @escaping (inout STRequest) -> Void) -> AnyPublisher<T, Error> {
-    //        send(configure: configure)
-    //            .map(keyPath)
-    //            .eraseToAnyPublisher()
-    //    }
 }
 
 
@@ -194,27 +188,13 @@ final public class Socket: @unchecked Sendable {
             }
         }
     }
-    
-    
-    public func send(configure: @escaping @Sendable (inout STRequest) -> Void) -> AnyPublisher<STResponse, Error>  {
-        Future { promise in
-            nonisolated(unsafe) let promise = promise
-            self.send(configure: configure) { result in
-                promise(result)
-            }
-        }
-        .eraseToAnyPublisher()
-    }
-    
-    
-    
+        
     private func startNotifier() {
         if connectivity.whenConnected == nil {
             let connectivityChanged: (Connectivity) -> Void = { [weak self] connectivity in
                 if connectivity.status != .notConnected {
                     self?.tryConnect()
                 }
-                //                self?.proxy.invoke{ $0.onAvailableSocketChanged() }
             }
             
             connectivity.whenConnected = connectivityChanged
@@ -252,7 +232,7 @@ final public class Socket: @unchecked Sendable {
     
     
     private func createSocket() -> WebSocket {
-        let socket = WebSocket(request: URLRequest(url: serverURL, timeoutInterval: 10))
+        let socket = WebSocket(request: URLRequest(url: serverURL, timeoutInterval: 5))
         socket.delegate = self
         
         return socket
@@ -294,7 +274,6 @@ extension Socket: WebSocketDelegate {
             self.state = newState
             if case .initialized = newState {
                 self.startPing()
-//                await Store.chatMessageModel.loadOfflineRecord()
             } else if case .waitingForNetwork = newState {
                 if connectivity.status != .notConnected {
                     tryConnect()
@@ -375,10 +354,8 @@ extension Socket: WebSocketDelegate {
     nonisolated public func didReceive(event: Starscream.WebSocketEvent, client: Starscream.WebSocketClient) {
         switch event {
         case .connected:
-            print("websocketDidConnect")
             handle(connectionState: .initialized)
         case .disconnected(let string, _):
-            print("websocketDidDisconnect", string)
             onClose(reason: string)
         case .binary(let data):
             onMessage(data: data)
@@ -389,14 +366,17 @@ extension Socket: WebSocketDelegate {
         case .ping:
             break
         case .error(let error):
-            print("websocketDidDisconnect", error ?? "")
             onClose(reason: error?.localizedDescription ?? "")
-        case .viabilityChanged(let bool):
-            print("websocketDidViabilityChanged \(bool)")
-        case .reconnectSuggested(let bool):
-            print("websocketDidReconnectSuggested \(bool)")
+        case .viabilityChanged(let viability):
+            if !viability {
+                onClose(reason: "Viability changed")
+            }
+        case .reconnectSuggested(let reconnect):
+            if reconnect  {
+                onClose(reason: "Reconnect suggested")
+            }
         case .cancelled:
-            print("websocketDidCancelled")
+            break
         case .peerClosed:
             onClose(reason: "Peer closed")
         }
